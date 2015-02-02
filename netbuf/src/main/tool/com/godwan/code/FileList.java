@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
 
 import com.godwan.code.lang.CppFile;
 import com.godwan.code.lang.JavaFile;
-import com.godwan.code.util.MessageType;
+import com.godwan.code.util.MsgStatus;
 
 public class FileList {
 
@@ -134,15 +134,15 @@ public class FileList {
 		}
 	}
 	
-	private List<MessageType> getMsgType(Matcher matcher) {
-		List<MessageType> msgList = new ArrayList<MessageType>(2);
+	private List<MsgStatus> getMsgType(Matcher matcher) {
+		List<MsgStatus> msgList = new ArrayList<MsgStatus>(2);
 
 		if (matcher.group(2).equals("<")) {
-			msgList.add(MessageType.MESSAGE_RESPONSE);
+			msgList.add(MsgStatus.SERVER_TO_CLIENT);
 		}
 
 		if (matcher.group(4).equals(">")) {
-			msgList.add(MessageType.MESSAGE_REQUEST);
+			msgList.add(MsgStatus.CLIENT_TO_SERVER);
 		}
 
 		return msgList;

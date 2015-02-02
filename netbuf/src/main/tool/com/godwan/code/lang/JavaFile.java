@@ -1,7 +1,7 @@
 package com.godwan.code.lang;
 
-import static com.godwan.code.util.CodeUtil.firstCharLowerCase;
-import static com.godwan.code.util.CodeUtil.firstCharUpCase;
+import static com.godwan.code.util.Strings.firstCharLowerCase;
+import static com.godwan.code.util.Strings.firstCharUpCase;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -10,7 +10,7 @@ import java.io.OutputStreamWriter;
 
 import com.godwan.code.ClassInfo;
 import com.godwan.code.FileInfo;
-import com.godwan.code.util.MessageType;
+import com.godwan.code.util.MsgStatus;
 
 public class JavaFile {
 
@@ -125,7 +125,7 @@ public class JavaFile {
 	}
 	
 	private String getDispatch(ClassInfo classInfo) {
-		if (classInfo.contains(MessageType.MESSAGE_REQUEST)) {
+		if (classInfo.contains(MsgStatus.CLIENT_TO_SERVER)) {
 			StringBuffer dispatch = new StringBuffer();
 			dispatch.append("\n\t\tcase Event_");
 			dispatch.append(classInfo.getClassName(true));
@@ -142,7 +142,7 @@ public class JavaFile {
 	}
 	
 	private String getDispatchMethod(ClassInfo classInfo) {
-		if (classInfo.contains(MessageType.MESSAGE_REQUEST)) {
+		if (classInfo.contains(MsgStatus.CLIENT_TO_SERVER)) {
 			StringBuffer abstrBuf = new StringBuffer();
 			abstrBuf.append("\n\n\t");
 			abstrBuf.append("public abstract void ");

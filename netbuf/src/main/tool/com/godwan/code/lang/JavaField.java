@@ -1,7 +1,7 @@
 package com.godwan.code.lang;
 
 
-import static com.godwan.code.util.CodeUtil.firstCharUpCase;
+import static com.godwan.code.util.Strings.firstCharUpCase;
 
 import java.util.Collections;
 import java.util.HashMap;

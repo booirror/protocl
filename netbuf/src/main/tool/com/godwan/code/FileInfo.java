@@ -1,6 +1,6 @@
 package com.godwan.code;
 
-import static com.godwan.code.util.CodeUtil.firstCharUpCase;
+import static com.godwan.code.util.Strings.firstCharUpCase;
 
 import java.util.LinkedList;
 import java.util.List;

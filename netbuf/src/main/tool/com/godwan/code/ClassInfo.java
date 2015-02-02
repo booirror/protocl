@@ -1,11 +1,11 @@
 package com.godwan.code;
 
-import static com.godwan.code.util.CodeUtil.firstCharUpCase;
+import static com.godwan.code.util.Strings.firstCharUpCase;
 
 import java.util.LinkedList;
 import java.util.List;
 
-import com.godwan.code.util.MessageType;
+import com.godwan.code.util.MsgStatus;
 
 public class ClassInfo {
 	
@@ -18,12 +18,12 @@ public class ClassInfo {
 	/** 属性列表*/
 	private List<FieldInfo> fieldList;
 	/** 消息类型*/
-	private List<MessageType> msgTypeList;
+	private List<MsgStatus> msgTypeList;
 	
 	public ClassInfo(FileInfo fileInfo, short xMethodIndex) {
 		this.fileInfo = fileInfo;
 		this.fieldList = new LinkedList<FieldInfo>();
-		this.msgTypeList = new LinkedList<MessageType>();
+		this.msgTypeList = new LinkedList<MsgStatus>();
 		this.xMethodIndex = xMethodIndex;
 	}
 	
@@ -51,20 +51,20 @@ public class ClassInfo {
 		fieldList.add(field);
 	}
 	
-	public boolean contains(MessageType msgType) {
+	public boolean contains(MsgStatus msgType) {
 		return msgTypeList.contains(msgType);
 	}
 
-	public void addMsgType(MessageType msgType) {
+	public void addMsgType(MsgStatus msgType) {
 		this.msgTypeList.add(msgType);
 	}
 	
 
-	public void addAllMsgType(List<MessageType> msgTypeList) {
+	public void addAllMsgType(List<MsgStatus> msgTypeList) {
 		this.msgTypeList.addAll(msgTypeList);
 	}
 	
-	public List<MessageType> getMessageTypes() {
+	public List<MsgStatus> getMessageTypes() {
 		return this.msgTypeList;
 	}
 

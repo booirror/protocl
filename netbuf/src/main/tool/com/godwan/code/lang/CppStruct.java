@@ -2,7 +2,7 @@ package com.godwan.code.lang;
 
 import com.godwan.code.ClassInfo;
 import com.godwan.code.FieldInfo;
-import com.godwan.code.util.MessageType;
+import com.godwan.code.util.MsgStatus;
 
 public class CppStruct {
 
@@ -34,7 +34,7 @@ public class CppStruct {
 			pk_h_buf.append(";\n");
 		}
 
-		if (clazz.contains(MessageType.MESSAGE_REQUEST)) {
+		if (clazz.contains(MsgStatus.CLIENT_TO_SERVER)) {
 			pk_h_buf.append("\tvoid Send(int type);\n");
 		}
 
@@ -46,7 +46,7 @@ public class CppStruct {
 		pk_h_buf.append(clazz.getClassName(false));
 		pk_h_buf.append("& value);\n");
 
-		if (clazz.contains(MessageType.MESSAGE_RESPONSE)) {
+		if (clazz.contains(MsgStatus.SERVER_TO_CLIENT)) {
 			pk_h_buf.append("void On");
 			pk_h_buf.append(clazz.getClassName(false));
 			pk_h_buf.append("(");
@@ -97,7 +97,7 @@ public class CppStruct {
 
 		pk_cpp_buf.append("}\n");
 
-		if (clazz.contains(MessageType.MESSAGE_REQUEST)) {
+		if (clazz.contains(MsgStatus.CLIENT_TO_SERVER)) {
 			pk_cpp_buf.append("void ");
 			pk_cpp_buf.append(clazz.getClassName(false));
 			pk_cpp_buf.append("::Send(int type)");
@@ -152,8 +152,8 @@ public class CppStruct {
 	public String getMsg_H() {
 		StringBuffer msg_h_buf = new StringBuffer();
 		
-		if (clazz.contains(MessageType.MESSAGE_REQUEST)
-				|| clazz.contains(MessageType.MESSAGE_RESPONSE)) {
+		if (clazz.contains(MsgStatus.CLIENT_TO_SERVER)
+				|| clazz.contains(MsgStatus.SERVER_TO_CLIENT)) {
 			msg_h_buf.append("const int MSG_");
 			msg_h_buf.append(clazz.getClassName(false));
 			msg_h_buf.append("\t\t\t= ");
@@ -167,7 +167,7 @@ public class CppStruct {
 	public String getMsg_Cpp() {
 		StringBuffer msg_cpp_buf = new StringBuffer();
 		
-		if (clazz.contains(MessageType.MESSAGE_RESPONSE)) {
+		if (clazz.contains(MsgStatus.SERVER_TO_CLIENT)) {
 			msg_cpp_buf.append("\t\tCMD_DEAL(");
 			msg_cpp_buf.append(clazz.getClassName(false));
 			msg_cpp_buf.append(");\n ");

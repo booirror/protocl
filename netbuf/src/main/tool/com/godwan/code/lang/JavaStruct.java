@@ -1,9 +1,9 @@
 package com.godwan.code.lang;
 
-import static com.godwan.code.util.CodeUtil.firstCharUpCase;
+import static com.godwan.code.util.Strings.firstCharUpCase;
 import com.godwan.code.ClassInfo;
 import com.godwan.code.FieldInfo;
-import com.godwan.code.util.MessageType;
+import com.godwan.code.util.MsgStatus;
 
 public class JavaStruct {
 
@@ -19,7 +19,7 @@ public class JavaStruct {
 		classdBuf.append("public static class ");
 		classdBuf.append(classInfo.getClassName(true));
 		classdBuf.append(" extends net.itas.core.Msg ");
-		if (classInfo.contains(MessageType.MESSAGE_RESPONSE)) {
+		if (classInfo.contains(MsgStatus.SERVER_TO_CLIENT)) {
 			classdBuf.append(" implements net.itas.core.io.SendAble ");
 		}
 		
@@ -59,7 +59,7 @@ public class JavaStruct {
 	
 	public String getMessage() {
 		StringBuffer contentBuf = new StringBuffer();
-		if (classInfo.contains(MessageType.MESSAGE_REQUEST)) {
+		if (classInfo.contains(MsgStatus.CLIENT_TO_SERVER)) {
 			contentBuf.append("\n\n\t");
 			contentBuf.append("static final short Event_");
 			contentBuf.append(classInfo.getClassName(false));
@@ -68,7 +68,7 @@ public class JavaStruct {
 			contentBuf.append(";");
 		}
 
-		if (classInfo.contains(MessageType.MESSAGE_RESPONSE)) {
+		if (classInfo.contains(MsgStatus.SERVER_TO_CLIENT)) {
 			
 			contentBuf.append("\n\n\t");
 			contentBuf.append("static final short Event_");
@@ -83,7 +83,7 @@ public class JavaStruct {
 	
 	public String getRequestMessage() {
 		StringBuffer contentBuf = new StringBuffer();
-		if (classInfo.contains(MessageType.MESSAGE_REQUEST)) {
+		if (classInfo.contains(MsgStatus.CLIENT_TO_SERVER)) {
 			contentBuf.append("\n\n\t");
 			contentBuf.append("public abstract void ");
 			contentBuf.append(classInfo.getClassName(false));
@@ -98,7 +98,7 @@ public class JavaStruct {
 	public String getSendMsg() {
 		StringBuffer msgBuf = new StringBuffer();
 		
-		if (classInfo.contains(MessageType.MESSAGE_RESPONSE)) {
+		if (classInfo.contains(MsgStatus.SERVER_TO_CLIENT)) {
 			msgBuf.append("\n\n\tpublic Message getData() {");
 			msgBuf.append("\n\t\treturn Message.allocate(Event_");
 			msgBuf.append(classInfo.getClassName(false));
