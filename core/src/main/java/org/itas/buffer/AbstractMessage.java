@@ -34,6 +34,10 @@ public abstract class AbstractMessage {
 		return bs;
 	}
 	
+	protected boolean readBool(ByteBuffer buf) {
+		return buf.get() == 1;
+	}
+
 	protected byte readInt8(ByteBuffer buf) {
 		return buf.get();
 	}
@@ -95,6 +99,11 @@ public abstract class AbstractMessage {
 	
 	protected void writeBytes(BubferBuilder builder, byte[] values) {
 		builder.addBytes(values);
+	}
+	
+	protected void writeBool(BubferBuilder builder, boolean value) {
+		byte bs = (byte)(value ? 1 : 0);
+		builder.addByte(bs);
 	}
 	
 	protected void writeInt8(BubferBuilder builder, byte value) {

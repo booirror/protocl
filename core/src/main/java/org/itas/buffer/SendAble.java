@@ -16,8 +16,4 @@ public interface SendAble {
 	 */
 	abstract ByteBuffer toBuffer();
 	
-	public static class AAA {
-		public static String bbb = "";
-	}
-	
 }

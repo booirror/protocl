@@ -13,5 +13,4 @@ public interface RecivedAble {
 	 */
 	public abstract byte SUFFIX();
 	
-	
 }
