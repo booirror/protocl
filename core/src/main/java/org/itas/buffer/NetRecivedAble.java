@@ -5,12 +5,6 @@ package org.itas.buffer;
  * @author liuzhen(liuxing521a@gmail.com)
  * @crateTime 2015年2月2日下午3:26:31
  */
-public interface RecivedAble {
+public interface NetRecivedAble extends NetAble {
 
-	/**
-	 * <p>事件后版半部分</p>
-	 * @return
-	 */
-	public abstract byte SUFFIX();
-	
 }

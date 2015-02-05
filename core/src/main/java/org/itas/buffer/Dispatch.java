@@ -20,6 +20,6 @@ public abstract class Dispatch<T> {
 	 * <p>事件分配器</p>
 	 * @param message 事件附带信息 
 	 */
-	public abstract void dispatch(T user, ByteBuffer buffer);
+	public abstract void dispatch(T user, byte suffix, ByteBuffer buffer) throws Exception;
 	
 }

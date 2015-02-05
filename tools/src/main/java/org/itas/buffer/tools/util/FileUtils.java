@@ -15,15 +15,15 @@ public class FileUtils {
 	public static List<File> getFiles(String dir, String suffix) {
 		File file = new File(dir);
 
-//		suffix = suffix.replace('.', '#');
-//		suffix = suffix.replaceAll("#", "\\\\.");
-//		suffix = suffix.replace('*', '#');
-//		suffix = suffix.replaceAll("#", ".*");
-//		suffix = suffix.replace('?', '#');
-//		suffix = suffix.replaceAll("#", ".?");
+		suffix = suffix.replace('.', '#');
+		suffix = suffix.replaceAll("#", "\\\\.");
+		suffix = suffix.replace('*', '#');
+		suffix = suffix.replaceAll("#", ".*");
+		suffix = suffix.replace('?', '#');
+		suffix = suffix.replaceAll("#", ".?");
 		
-		//^(?:\\w+\\.xlsx|\\w+\\.xls)$
-		suffix = "^(?:\\w+\\" + suffix + ")$";
+//		//^(?:\\w+\\.xlsx|\\w+\\.xls)$
+//		suffix = "^(?:\\w+\\" + suffix + ")$";
 
 		Pattern p = Pattern.compile(suffix);
 		List<File> list = filePattern(file, p);

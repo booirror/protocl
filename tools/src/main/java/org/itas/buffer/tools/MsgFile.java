@@ -3,8 +3,8 @@ package org.itas.buffer.tools;
 import static org.itas.buffer.tools.util.StringUtils.firstCharUpCase;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -44,7 +44,7 @@ public class MsgFile {
 	public MsgFile(File file, byte order) {
 		this.fileName = file.getName().split("\\.")[0];
 		this.fileOrder = order;
-		this.bodys = new LinkedList<>();
+		this.bodys = new ArrayList<>();
 		this.imports = new HashSet<>();
 	}
 

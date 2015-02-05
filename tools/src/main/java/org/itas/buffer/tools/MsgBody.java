@@ -13,11 +13,6 @@ import org.itas.buffer.tools.util.MsgStatus;
 public class MsgBody {
 	
 	/**
-	 * 消息所属的file
-	 */
-	private MsgFile msgFile;
-	
-	/**
 	 * 消息名称
 	 */
 	private String msgName;
@@ -38,11 +33,9 @@ public class MsgBody {
 	 */
 	private List<MsgStatus> msgTypes;
 	
-	public MsgBody(MsgFile msgFile, short msgOrder, String msgName) {
-		this.msgFile = msgFile;
+	public MsgBody(short msgOrder, String msgName) {
 		this.msgOrder = msgOrder;
 		this.msgName = msgName;
-		this.msgFile.addMsgBody(this);
 		this.fields = new LinkedList<>();
 		this.msgTypes = new ArrayList<>(2);
 	}
@@ -80,12 +73,15 @@ public class MsgBody {
 	 * @return
 	 */
 	public String getHexOrder() {
-		String hex = Integer.toHexString(msgOrder);
+		String hex;
 		if (msgOrder <= 0xF) {
-			hex = String.format("0", hex);
+			hex = "0x0" + Integer.toHexString(msgOrder);
+		} else {
+			hex = "0x" + Integer.toHexString(msgOrder);
 		}
 		
-		return String.format("0x%s", hex);
+		System.out.println(hex);
+		return hex;
 	}
 	
 	public void clear() {

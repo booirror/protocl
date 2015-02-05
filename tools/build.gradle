@@ -1,23 +1,27 @@
 apply plugin: "java"
-apply plugin: 'maven'
+//apply plugin: 'maven'
 
 sourceCompatibility = 1.8
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
-//sourceSets.main.java.srcDirs = [ 'src/main/java/', 'src/main/tool/', 'src/main/resources/', 'src/test/java/', 'src/test/resources/' ]
+//sourceSets.main.java.srcDirs = [ 'src/main/java/', 'src/main/tool/']
 
 eclipse.project {
     name = appName + '-tools'
 }
 
-task bufferJar(type:Jar) {
-    baseName = 'itas-buffer'
-	from( 'build/classes/main')  
-	dependsOn classes 
-    include('org/itas/buffer/*')
-    //exclude('com/itans/core/**/*Test*') 
+jar {
+	baseName = 'itas-buffer-protoc'
+	include('org/itas/buffer/tools/**')
+	
+	manifest {
+	    attributes 'Main-Class': 'com.godwan.code.GenCode' 
+	    attributes 'title': 'utils' 
+	    attributes 'version': version
+	 	attributes 'createTime': new Date() 
+	}
 }
 
-task toolsJar(type:Jar) {
+/*jar {
  	baseName = 'protocl'
 	manifest {
 	    attributes 'Main-Class': 'com.godwan.code.GenCode' 
@@ -29,18 +33,8 @@ task toolsJar(type:Jar) {
 	from('build/classes/main')
 	dependsOn classes 
     include('com/godwan/code/**')
-	
-}
-
-jar {
-	manifest {
-	    attributes 'Main-Class': 'com.godwan.code.GenCode' 
-	    attributes 'title': 'utils' 
-	    attributes 'version': version
-	 	attributes 'createTime': new Date() 
-	}
-	
-	from {
+    
+    from {
 		configurations.compile.collect{
 			it.isDirectory() ? it : zipTree(it)
 		}
@@ -49,7 +43,8 @@ jar {
 		}
 	}
 	
-	//doLast {
-    //    file('build/libs/code-1.0.1.jar').renameTo(file('build/libs/protoc.jar'))
-    //}
-}
+	doLast {
+        file('build/libs/code-1.0.1.jar').renameTo(file('build/libs/protoc.jar'))
+    }
+	
+}*/

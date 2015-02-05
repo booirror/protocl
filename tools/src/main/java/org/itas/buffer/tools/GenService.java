@@ -6,7 +6,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 
@@ -35,7 +34,7 @@ public class GenService {
 	public GenService() {
 		fileOrder = 0;
 		msgOrder = 1;
-		msgFiles = new LinkedList<>();
+		msgFiles = new ArrayList<>();
 	}
 
 	public void initialize(String srcPath) throws Exception {
@@ -68,8 +67,10 @@ public class GenService {
 					} else if (finder.pat == MsgPat.MESSAGEDEF) {
 						checkOutOfBounds();
 						
-						msgBody = new MsgBody(msgFile, msgOrder, finder.group(1));
+						msgBody = new MsgBody(msgOrder, finder.group(1));
 						msgBody.addAllMsgType(getMsgType(finder));
+
+						msgFile.addMsgBody(msgBody);
 					} else if (finder.pat == MsgPat.COTENTNOTES) {
 						// do nothing
 					} else if (finder.pat == MsgPat.MESSAGEFIELD) {
@@ -79,10 +80,7 @@ public class GenService {
 					} 
 				}
 			} 
-			
-			System.out.println(msgFile);
 		}
-		
 	}
 	
 	public void generate(String distPath) throws IOException {
@@ -91,11 +89,15 @@ public class GenService {
 		for (MsgFile msgFile : msgFiles) {
 			javaFile = new JavaFileGen(msgFile);
 			javaFile.autoGenMsg(distPath);
-			javaFile.autoGenEvent(distPath);
+//			javaFile.autoGenEvent(distPath);
 
 //			cppFile = new CppFile(msgFile);
 //			cppFile.genCpp(distPath + "\\cpp");
 		}
+	}
+	
+	public List<MsgFile> msgFile() {
+		return msgFiles;
 	}
 
 	private List<MsgStatus> getMsgType(Finder finder) {

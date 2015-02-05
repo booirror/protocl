@@ -37,22 +37,11 @@ project(":core") {
     apply plugin: "java"
 
     dependencies {
-		compile (
-			//'ch.qos.logback:logback-classic:1.1.2',
-			//'ch.qos.logback:logback-core:1.1.2',
-			//'org.slf4j:slf4j-api:1.7.7',
-			'junit:junit:4.9'
-		)
+		compile ('junit:junit:4.9')
 		
-		runtime(
-		)
-		
-		testCompile(
-			//'junit:junit:4.9'
-		)
-		
-		testRuntime(
-		)
+		//runtime()
+		//testCompile()
+		//testRuntime()
     }
 }
 
@@ -60,66 +49,16 @@ project(":tools") {
     apply plugin: "java"
 
     dependencies {
-		compile (
-			'junit:junit:4.9'
-		)
+		compile ('junit:junit:4.9')
 		
-		runtime(
-		)
-		
-		testCompile(
-			//'junit:junit:4.9'
-		)
-		
-		testRuntime(
-		)
+		//runtime()
+		//testCompile()
+		//testRuntime()
     }
 }
 
 
 task wrapper(type: Wrapper) {  
    	gradleVersion = '2.1'  
-		distributionUrl = 'http://192.168.1.200/gradle-2.1-all.zip' 
-}
-
-
-task untar(type: Copy) {
-  from tarTree('F:/liuzhen_2014-07-17225442.tar.gz')
-
-  //tar tree attempts to guess the compression based on the file extension
-  //however if you must specify the compression explicitly you can:
-  //from tarTree(resources.gzip('someTar.ext'))
-
-  //in case you work with unconventionally compressed tars
-  //you can provide your own implementation of a ReadableResource:
-  //from tarTree(yourOwnResource as ReadableResource)
-
-  into 'service'
-}
-
-task tarFiles(type: Tar) { 
-		from ('H:/svnrepos/svn/') {
-				include  'conf/*'
-		}
-		
-		from ('F:/nginx-1.2.3') {
-				include  'html/'
-				include  'logs/'
-		}
-
-    // Set destination directory.
-    //destinationDir = file("$buildDir/tarballs")
-    destinationDir = file("F:/")
-
-    // Set filename properties.
-    baseName = 'liuzhen' + getDate()
-    extension = 'tar.gz'
-
-    compression = Compression.GZIP // or Compression.BZIP2
-}
-
-def getDate() {
-    def date = new Date()
-    def formattedDate = date.format('yyyyMMddHHmmss')
-    return formattedDate
+	distributionUrl = 'http://192.168.1.200/gradle-2.1-all.zip' 
 }

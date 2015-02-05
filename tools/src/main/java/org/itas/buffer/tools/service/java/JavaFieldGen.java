@@ -8,6 +8,7 @@ import java.util.EnumMap;
 
 import org.itas.buffer.tools.MsgBody;
 import org.itas.buffer.tools.MsgField;
+import org.itas.buffer.tools.MsgFiledType;
 import org.itas.buffer.tools.MsgFiledType.FieldType;
 
 public class JavaFieldGen  {
@@ -46,14 +47,14 @@ public class JavaFieldGen  {
 	}
 
 	public String defendField() {
-		return String.format("private %s %s;", getDefendWithGeneric(), msgField.getDefFieldName());
+		return String.format("private %s %s;", getWholeDefineClassTypeName(), msgField.getDefFieldName());
 	}
 	
 	public String getMethod() {
 		StringBuffer methodBuf = new StringBuffer();
 		
 		methodBuf.append(nextLine(0, 1));
-		methodBuf.append(String.format("public %s get%s()", getDefendWithGeneric(), firstCharUpCase(msgField.getDefFieldName())));
+		methodBuf.append(String.format("public %s get%s()", getWholeDefineClassTypeName(), firstCharUpCase(msgField.getDefFieldName())));
 		methodBuf.append(" {");
 		
 		methodBuf.append(nextLine(1, 2));
@@ -70,7 +71,7 @@ public class JavaFieldGen  {
 		
 		methodBuf.append(nextLine(0, 1));
 		methodBuf.append(String.format("public %s set%s(%s data) {", 
-				msgBody.getMsgName(true), firstCharUpCase(msgField.getDefFieldName()), getDefendWithGeneric()));
+				msgBody.getMsgName(true), firstCharUpCase(msgField.getDefFieldName()), getWholeDefineClassTypeName()));
 		
 		methodBuf.append(nextLine(1, 2));
 		methodBuf.append(String.format("this.%s = data;", msgField.getDefFieldName()));
@@ -84,12 +85,16 @@ public class JavaFieldGen  {
 		return methodBuf.toString();
 	}
 	
-	public String setIndexMethod() {
+	public String setVectorMethod() {
+		if (msgField.getDefClassType() != FieldType.VECTOR) {
+			return "";
+		}
+		
 		StringBuffer methodBuf = new StringBuffer();
 		
 		methodBuf.append(nextLine(0, 1));
 		methodBuf.append(String.format("public %s set%s(int index, %s data) {", 
-				msgBody.getMsgName(true), firstCharUpCase(msgField.getDefFieldName()), getDefendWithGeneric()));
+				msgBody.getMsgName(true), firstCharUpCase(msgField.getDefFieldName()), getVectorGenericClassTypeName()));
 		
 		methodBuf.append(nextLine(1, 2));
 		methodBuf.append(String.format("this.%s.set(index, data);", msgField.getDefFieldName()));
@@ -103,17 +108,21 @@ public class JavaFieldGen  {
 		return methodBuf.toString();
 	}
 	
-	public String addMethod() {
+	public String addVectorMethod() {
+		if (msgField.getDefClassType() != FieldType.VECTOR) {
+			return "";
+		}
+		
 		StringBuffer methodBuf = new StringBuffer();
 		
 		methodBuf.append(nextLine(0, 1));
 		methodBuf.append(String.format("public %s add%s(%s data) {", 
-				msgBody.getMsgName(true), firstCharUpCase(msgField.getDefFieldName()), getGenericType()));
+				msgBody.getMsgName(true), firstCharUpCase(msgField.getDefFieldName()), getVectorGenericClassTypeName()));
 		
 		methodBuf.append(nextLine(1, 2));
-		methodBuf.append(String.format("if (%s == null) {", msgField.getDefFieldName()));
+		methodBuf.append(String.format("if (this.%s == null) {", msgField.getDefFieldName()));
 		methodBuf.append(nextLine(1, 3));
-		methodBuf.append(String.format("this.%s = new java.util.LinkedList<>();", msgField.getDefFieldName()));
+		methodBuf.append(String.format("this.%s = new ArrayList<>();", msgField.getDefFieldName()));
 		methodBuf.append(nextLine(1, 2));
 		methodBuf.append("}");
 		
@@ -128,17 +137,21 @@ public class JavaFieldGen  {
 		return methodBuf.toString();
 	}
 	
-	public String addAllMethod() {
+	public String addAllVectorMethod() {
+		if (msgField.getDefClassType() != FieldType.VECTOR) {
+			return "";
+		}
+		
 		StringBuffer methodBuf = new StringBuffer();
 			
 		methodBuf.append(nextLine(0, 1));
-		methodBuf.append(String.format("public %s addAll%s(java.util.List<%s> datas) {", 
-				msgBody.getMsgName(true), firstCharUpCase(msgField.getDefFieldName()), getGenericType()));
+		methodBuf.append(String.format("public %s addAll%s(%s datas) {", 
+				msgBody.getMsgName(true), firstCharUpCase(msgField.getDefFieldName()), getWholeDefineClassTypeName()));
 		
 		methodBuf.append(nextLine(1, 2));
-		methodBuf.append(String.format("if (%s == null) {", msgField.getDefFieldName()));
+		methodBuf.append(String.format("if (this.%s == null) {", msgField.getDefFieldName()));
 		methodBuf.append(nextLine(1, 3));
-		methodBuf.append(String.format("this.%s = new java.util.LinkedList<>();", msgField.getDefFieldName()));
+		methodBuf.append(String.format("this.%s = new ArrayList<>();", msgField.getDefFieldName()));
 		methodBuf.append(nextLine(1, 2));
 		methodBuf.append("}");
 		
@@ -153,38 +166,51 @@ public class JavaFieldGen  {
 		return methodBuf.toString();
 	}
 	
-	public String getDefineType() {
+	public String getVectorGenericClassTypeName() {
+		if (msgField.getDefClassType() != FieldType.VECTOR) {
+			return null;
+		}
+		
+		switch (msgField.getDefGenericClassType()) {
+		case MESSAGE:  return msgField.getDefGenericClassTypeName();
+		default:	   return JAVA_TYPE.get(msgField.getDefGenericClassType()).wrappType();
+		}
+	}
+	
+	public String getWholeDefineClassTypeName() {
 		switch (msgField.getDefClassType()) {
+		case VECTOR:  return "List<" + getVectorGenericClassTypeName() + '>';
 		case MESSAGE: return msgField.getDefClassTypeName();
 		default:	  return JAVA_TYPE.get(msgField.getDefClassType()).basicType();
 		}
 	}
+	
+	private static class JavaFiledType implements MsgFiledType {
 
-	public String getGenericType() {
-		/*begin 如果定义类型不为vector,不存在包装类型*/
-		if (msgField.getDefClassType() != FieldType.VECTOR) {
-			return null;
-		}/*end*/
+		/**
+		 * java基础类型
+		 */
+		private String basicType;
+		
+		/**
+		 * java 包装类型
+		 */
+		private String wrappType;
 		
 		
-		/*begin 定义类型为voctor且为消息类型,返回定义的类型*/
-		if (msgField.getDefGenericClassType() == FieldType.MESSAGE) {
-			return msgField.getDefClassTypeName();
-		}/*end*/
-
-		/*begin 返回基础类型的包装类型*/
-		return JAVA_TYPE.get(msgField.getDefGenericClassType()).wrappType();
-	}
-
-	private String getDefendWithGeneric() {
-		StringBuffer buf = new StringBuffer();
-		
-		if (msgField.getDefClassType() == FieldType.VECTOR) {
-			buf.append("java.util.List<").append(getGenericType()).append('>');
-		} else {
-			buf.append(getDefineType());
+		public JavaFiledType(String basicType, String wrappType) {
+			this.basicType = basicType;
+			this.wrappType = wrappType;
 		}
 		
-		return buf.toString();
+		@Override
+		public String basicType() {
+			return basicType;
+		}
+
+		@Override
+		public String wrappType() {
+			return wrappType;
+		}
 	}
 }

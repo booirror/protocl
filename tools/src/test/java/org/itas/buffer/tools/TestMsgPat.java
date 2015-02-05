@@ -2,15 +2,17 @@ package org.itas.buffer.tools;
 
 import java.io.IOException;
 
+import junit.framework.Assert;
+
 import org.junit.Test;
 
 public class TestMsgPat {
 
 	@Test
 	public void testPackage() throws IOException {
-		int PREFIX = 1, SUFFIX = 1;
+		int PREFIX = 0xF, SUFFIX = 0xC;
 		short header = (short)((PREFIX << 8) | SUFFIX);
-		System.out.println(Integer.toHexString(header));
+		Assert.assertEquals(0x0F0C, header);
 	}
 
 }

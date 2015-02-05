@@ -1,16 +1,18 @@
 package org.itas.buffer.tools.service.java;
 
-import static org.itas.buffer.tools.util.StringUtils.firstCharLowerCase;
-import static org.itas.buffer.tools.util.StringUtils.firstCharUpCase;
 import static org.itas.buffer.tools.util.StringUtils.nextLine;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.itas.buffer.tools.MsgBody;
+import org.itas.buffer.tools.MsgField;
 import org.itas.buffer.tools.MsgFile;
+import org.itas.buffer.tools.MsgFiledType.FieldType;
 import org.itas.buffer.tools.util.MsgStatus;
 
 public class JavaFileGen {
@@ -19,11 +21,25 @@ public class JavaFileGen {
 	 * 消息文件
 	 */
 	private MsgFile msgFile;
+	
+	/**
+	 * 外部导入的包
+	 */
+	private Set<String> imports;
+	
+	/**
+	 * 事件分配器导入包
+	 */
+	private Set<String> eventImports;
 
 	public JavaFileGen(MsgFile msgFile) {
 		this.msgFile = msgFile;
+		this.imports = new HashSet<>();
+		this.eventImports = new HashSet<>();
+		
+		checkImports();
 	}
-
+	
 	public void autoGenMsg(String desPath) throws IOException {
 		System.out.println("java begin.");
 		StringBuffer msgBuffer = new StringBuffer();
@@ -83,16 +99,21 @@ public class JavaFileGen {
 		
 		StringBuffer eventBuffer = new StringBuffer();
 		eventBuffer.append(javaPackageName());
-		eventBuffer.append(String.format("public abstract class %sEvent<T> extends org.itas.buffer.Dispatch {", msgFile.getMsgFileName(true)));
+		
+		eventBuffer.append(nextLine(1, 0));
+		eventBuffer.append(eventImports());
+		
+		eventBuffer.append(nextLine(2, 0));
+		eventBuffer.append(String.format("public abstract class %sEvent<T> extends Dispatch<T> {", msgFile.getMsgFileName(true)));
 		
 
 		StringBuffer dispatch = new StringBuffer();
 		dispatch.append(nextLine(2, 1));
 		dispatch.append("@Override");
 		dispatch.append(nextLine(1, 1));
-		dispatch.append("public final void dispatch(T value, org.itas.buffer.RecivedAble request) throws Exception {");
+		dispatch.append("public final void dispatch(T data, byte suffix, ByteBuffer buf) throws Exception {");
 		dispatch.append(nextLine(1, 2));
-		dispatch.append("switch(request.SUFFIX()) {");
+		dispatch.append("switch(suffix) {");
 		
 		StringBuffer abstrBuf = new StringBuffer();
 		
@@ -130,23 +151,19 @@ public class JavaFileGen {
 		System.out.println("java end.");
 	}
 	
-	private String getDispatch(MsgBody classInfo) {
+	String getDispatch(MsgBody classInfo) {
+		StringBuffer dispatch = new StringBuffer();
+
 		if (classInfo.isTypeExist(MsgStatus.CLIENT_TO_SERVER)) {
-			StringBuffer dispatch = new StringBuffer();
-			
 			dispatch.append(nextLine(1, 2));
-			dispatch.append("case Event_");
-			dispatch.append(classInfo.getMsgName(true));
-			dispatch.append(": \n\t\t\t");
-			dispatch.append(firstCharLowerCase(classInfo.getMsgName(false)));
-			dispatch.append("(user, ");
-			dispatch.append(firstCharUpCase(classInfo.getMsgName(false)));
-			dispatch.append(".parseFrom(message.getBuffer())); \n\t\t\tbreak;");
-			
-			return dispatch.toString();
+			dispatch.append(String.format("case %s.SUFFIX:", classInfo.getMsgName(true)));
+			dispatch.append(nextLine(1, 3));
+			dispatch.append(String.format("%s(data, %s.fromBuffer(buf));", classInfo.getMsgName(false), classInfo.getMsgName(true)));
+			dispatch.append(nextLine(1, 3));
+			dispatch.append("break;");
 		}
 		
-		return "";
+		return dispatch.toString();
 	}
 	
 	private String javaPackageName() {
@@ -162,6 +179,50 @@ public class JavaFileGen {
 			builder.append(String.format("import %s;", impt.replace('/', '.')));
 		}
 		
+		
+		for (String impt : imports) {
+			builder.append(nextLine(1, 0));
+			builder.append(String.format("import %s;", impt.replace('/', '.')));
+		}
+		
 		return builder.toString();
+	}
+	
+	private String eventImports() {
+		StringBuilder builder = new StringBuilder();
+		
+		for (String impt : eventImports) {
+			builder.append(nextLine(1, 0));
+			builder.append(String.format("import %s;", impt.replace('/', '.')));
+		}
+		
+		return builder.toString();
+	}
+	
+	private void checkImports() {
+		imports.add("java/nio/ByteBuffer");
+		imports.add("org/itas/buffer/BubferBuilder");
+		imports.add("org/itas/buffer/AbstractMessage");
+
+		eventImports.add("org/itas/buffer/Dispatch");
+		eventImports.add("java/nio/ByteBuffer");
+		
+		for (MsgBody body : msgFile.getMsgBodys()) {
+			if (body.isTypeExist(MsgStatus.CLIENT_TO_SERVER)) {
+				imports.add("org/itas/buffer/NetRecivedAble");
+				eventImports.add(msgFile.getPackageName() + "/" + msgFile.getMsgFileName(true) + "/*");
+			}
+			
+			if (body.isTypeExist(MsgStatus.CLIENT_TO_SERVER)) {
+				imports.add("org/itas/buffer/NetSendAble");
+			}
+			
+			for (MsgField field : body.getMsgFields()) {
+				if (field.getDefClassType() == FieldType.VECTOR) {
+					imports.add("java/util/List");
+					imports.add("java/util/ArrayList");
+				}
+			}
+		}
 	}
 }

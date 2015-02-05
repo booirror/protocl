@@ -14,18 +14,10 @@ public abstract class AbstractMessage {
 	protected AbstractMessage() {
 	}
 	
-	/**
-	 * <p>事件后版半部分</p>
-	 * @return
-	 */
-	public abstract byte SUFFIX();
-
 	// ====================================================
 	// read byte from ByteBuffer
 	// ====================================================
-	protected abstract void fromByteBuffer(ByteBuffer buf);
-	
-	protected abstract AbstractMessage readMessage(ByteBuffer buf);
+	public abstract AbstractMessage readMsg(ByteBuffer buf);
 	
 	protected byte[] readBytes(ByteBuffer buf, int len) {
 		byte[] bs = new byte[len];
@@ -54,6 +46,14 @@ public abstract class AbstractMessage {
 		return buf.getLong();
 	}
 	
+	protected float readFloat(ByteBuffer buf) {
+		return buf.getFloat();
+	}
+	
+	protected double readDouble(ByteBuffer buf) {
+		return buf.getDouble();
+	}
+	
 	protected String readString(ByteBuffer buf) {
 		final int len = readInt16(buf);
 		return new String(readBytes(buf, len), encoding);
@@ -77,7 +77,7 @@ public abstract class AbstractMessage {
 				dataList.add(readString(buf));
 			} else if (AbstractMessage.class.isAssignableFrom(clazz)) {
 				AbstractMessage data = newInstance(clazz);
-				data.readMessage(buf);
+				data.readMsg(buf);
 				dataList.add(data);
 			} else {
 				throw new RuntimeException("unkown message Type:" + clazz.getName());
@@ -93,9 +93,7 @@ public abstract class AbstractMessage {
 	// ====================================================
 	// write byte to byteBuffer
 	// ====================================================
-	protected abstract void toByteBuffer(BubferBuilder builder);
-	
-	protected abstract void writeMessage(BubferBuilder builder);
+	public abstract void writeMsg(BubferBuilder builder);
 	
 	protected void writeBytes(BubferBuilder builder, byte[] values) {
 		builder.addBytes(values);
@@ -120,6 +118,14 @@ public abstract class AbstractMessage {
 
 	protected void writeInt64(BubferBuilder builder, long value) {
 		builder.addLong(value);
+	}
+	
+	protected void writeFloat(BubferBuilder builder, float value) {
+		builder.addFloat(value);
+	}
+	
+	protected void writeDouble(BubferBuilder builder, double value) {
+		builder.addDouble(value);
 	}
 	
 	protected void writeString(BubferBuilder builder, String data) { 
@@ -150,7 +156,7 @@ public abstract class AbstractMessage {
 			} else if (data instanceof String) {
 				writeString(builder, (String)data);
 			} else if (data instanceof AbstractMessage) {
-				((AbstractMessage)data).writeMessage(builder);
+				((AbstractMessage)data).writeMsg(builder);
 			} else {
 				throw new RuntimeException("unkown message Type:" + data.getClass().getName());
 			}

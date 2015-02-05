@@ -19,6 +19,11 @@ public class MsgField {
 	 * vector泛型类型
 	 */
 	private FieldType defGenericClassType;
+
+	/**
+	 * vector泛型类型名
+	 */
+	private String defGenericClassTypeName;
 	
 	/**
 	 * 属性名称
@@ -28,7 +33,8 @@ public class MsgField {
 	public MsgField(Finder finder) {
 		this.defClassTypeName = finder.group(1);
 		this.defClassType = FieldType.parse(defClassTypeName);
-		this.defGenericClassType = FieldType.parse(finder.group(3));;
+		this.defGenericClassTypeName = finder.group(3);
+		this.defGenericClassType = FieldType.parse(defGenericClassTypeName);;
 		this.defFieldName = finder.group(4);
 	}
 	
@@ -42,6 +48,10 @@ public class MsgField {
 
 	public FieldType getDefGenericClassType() {
 		return defGenericClassType;
+	}
+
+	public String getDefGenericClassTypeName() {
+		return defGenericClassTypeName;
 	}
 
 	public String getDefFieldName() {
