@@ -6,12 +6,13 @@ import static org.itas.buffer.tools.util.StringUtils.nextLine;
 
 import java.util.EnumMap;
 
+import org.itas.buffer.tools.AbstreactFieldType;
 import org.itas.buffer.tools.MsgBody;
 import org.itas.buffer.tools.MsgField;
 import org.itas.buffer.tools.MsgFiledType;
 import org.itas.buffer.tools.MsgFiledType.FieldType;
 
-public class JavaFieldGen  {
+public class JavaFieldGen extends AbstreactFieldType {
 	
 	private static final EnumMap<FieldType, JavaFiledType> JAVA_TYPE = new EnumMap<FieldType, JavaFiledType>(FieldType.class) {
 		private static final long serialVersionUID = -6861525540105806338L;
@@ -166,6 +167,7 @@ public class JavaFieldGen  {
 		return methodBuf.toString();
 	}
 	
+	@Override
 	public String getVectorGenericClassTypeName() {
 		if (msgField.getDefClassType() != FieldType.VECTOR) {
 			return null;
@@ -177,6 +179,7 @@ public class JavaFieldGen  {
 		}
 	}
 	
+	@Override
 	public String getWholeDefineClassTypeName() {
 		switch (msgField.getDefClassType()) {
 		case VECTOR:  return "List<" + getVectorGenericClassTypeName() + '>';

@@ -85,4 +85,5 @@ public class TestMsgField {
 //		string taskRid;							
 //		vector<MyTaskObjective> objective;		
 	}
+	
 }

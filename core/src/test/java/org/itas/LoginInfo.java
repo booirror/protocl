@@ -1,6 +1,6 @@
 package org.itas;
 
-import java.nio.ByteBuffer;
+import org.itas.TComm.*;
 import java.nio.ByteBuffer;
 import org.itas.buffer.NetRecivedAble;
 import org.itas.buffer.BubferBuilder;
@@ -9,17 +9,18 @@ import org.itas.buffer.AbstractMessage;
 import java.util.List;
 import org.itas.buffer.NetSendAble;
 
-public class Test {
+public class LoginInfo {
 
 	static final byte PREFIX = 0x01;
 
-	private Test() {
+	private LoginInfo() {
 	} 
 
 public static class Wife extends AbstractMessage{
 
-
 	private String nickname;
+	private Chirld chirld;
+	private List<Chirld> chirlds;
 
 	private Wife() {
 	}
@@ -33,15 +34,58 @@ public static class Wife extends AbstractMessage{
 		return this;
 	}
 
+	public Chirld getChirld() {
+		return this.chirld;
+	}
+
+	public Wife setChirld(Chirld data) {
+		this.chirld = data;
+		return this;
+	}
+
+	public List<Chirld> getChirlds() {
+		return this.chirlds;
+	}
+
+	public Wife setChirlds(List<Chirld> data) {
+		this.chirlds = data;
+		return this;
+	}
+
+	public Wife addChirlds(Chirld data) {
+		if (this.chirlds == null) {
+			this.chirlds = new ArrayList<>();
+		}
+		this.chirlds.add(data);
+		return this;
+	}
+
+	public Wife addAllChirlds(List<Chirld> datas) {
+		if (this.chirlds == null) {
+			this.chirlds = new ArrayList<>();
+		}
+		this.chirlds.addAll(datas);
+		return this;
+	}
+
+	public Wife setChirlds(int index, Chirld data) {
+		this.chirlds.set(index, data);
+		return this;
+	}
+
 	@Override
 	public Wife readMsg(ByteBuffer buf) {
 		this.nickname = readString(buf);
+		this.chirld = Chirld.newBuilder().readMsg(buf);
+		this.chirlds = readArray(Chirld.class, buf);
 		return this;
 	}
 
 	@Override
 	public void writeMsg(BubferBuilder builder) {
 		writeString(builder, this.nickname);
+		this.chirld.writeMsg(builder);
+		writeArray(builder, this.chirlds);
 	}
 
 	public static Wife newBuilder() {
@@ -54,6 +98,13 @@ public static class Wife extends AbstractMessage{
 
 		strBuf.append("Wife{");
 		strBuf.append("\n\tnickname:").append(nickname);
+		strBuf.append("\n\tchirld:").append(chirld);
+		if (chirlds  != null) {
+			strBuf.append("\nchirlds:");
+			for (Chirld data : chirlds) {
+				strBuf.append(data).append(",\n");
+			}
+		}
 		strBuf.append("\n}");
 
 		return strBuf.toString();
@@ -61,7 +112,6 @@ public static class Wife extends AbstractMessage{
 }
 
 public static class Player extends AbstractMessage{
-
 
 	private boolean merry;
 	private byte chirld;
@@ -368,14 +418,13 @@ public static class PlayerRequest extends AbstractMessage implements NetRecivedA
 
 	static final byte SUFFIX = 0x01;
 
-
 	private Player player;
 
 	private PlayerRequest() {
 	}
 
 	@Override
-	public byte SUFFIX() {
+	public final byte SUFFIX() {
 		return SUFFIX;
 	}
 
@@ -423,14 +472,13 @@ public static class PlayerResponse extends AbstractMessage implements NetSendAbl
 
 	static final byte SUFFIX = 0x02;
 
-
 	private Player player;
 
 	private PlayerResponse() {
 	}
 
 	@Override
-	public byte SUFFIX() {
+	public final byte SUFFIX() {
 		return SUFFIX;
 	}
 
@@ -489,14 +537,13 @@ public static class PlayerInfo extends AbstractMessage implements NetRecivedAble
 
 	static final byte SUFFIX = 0x03;
 
-
 	private Player player;
 
 	private PlayerInfo() {
 	}
 
 	@Override
-	public byte SUFFIX() {
+	public final byte SUFFIX() {
 		return SUFFIX;
 	}
 

@@ -1,14 +1,15 @@
 package org.itas;
 
 import java.nio.ByteBuffer;
-import org.itas.buffer.Dispatch;
-import org.itas.Test.*;
+import org.itas.buffer.NetService;
+import org.itas.LoginInfo.*;
 
-public abstract class TestEvent<T> extends Dispatch<T> {
+public abstract class LoginInfoEvent<T> extends NetService<T> {
 
-	public abstract void playerRequest(T value, PlayerRequest request);
-
-	public abstract void playerInfo(T value, PlayerInfo request);
+	@Override
+	public final byte PREFIX() {
+		return LoginInfo.PREFIX;
+	}
 
 	@Override
 	public final void dispatch(T data, byte suffix, ByteBuffer buf) throws Exception {
@@ -21,5 +22,9 @@ public abstract class TestEvent<T> extends Dispatch<T> {
 			break;
 		}
 	}
+
+	public abstract void playerRequest(T value, PlayerRequest request);
+
+	public abstract void playerInfo(T value, PlayerInfo request);
 
 }

@@ -110,7 +110,7 @@ public class TestJavaStruct {
 	@Test
 	public void testSUFFIX() {
 		String method = "\n\n\t@Override" + 
-						"\n\tpublic byte SUFFIX() {" +
+						"\n\tpublic final byte SUFFIX() {" +
 						"\n\t\treturn SUFFIX;" +
 						"\n\t}";
 		

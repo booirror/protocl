@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Objects;
 
 import org.itas.buffer.tools.Finder.MsgPat;
+import org.itas.buffer.tools.client.cpp.CppFile;
 import org.itas.buffer.tools.service.java.JavaFileGen;
 import org.itas.buffer.tools.util.FileUtils;
 import org.itas.buffer.tools.util.MsgStatus;
@@ -83,16 +84,16 @@ public class GenService {
 		}
 	}
 	
-	public void generate(String distPath) throws IOException {
+	public void generate(String sdistPath, String cdistPath) throws IOException {
 		JavaFileGen javaFile;
-//		CppFile cppFile;
+		CppFile cppFile;
 		for (MsgFile msgFile : msgFiles) {
 			javaFile = new JavaFileGen(msgFile);
-			javaFile.autoGenMsg(distPath);
-//			javaFile.autoGenEvent(distPath);
+			javaFile.autoGenMsg(sdistPath);
+			javaFile.autoGenEvent(sdistPath);
 
-//			cppFile = new CppFile(msgFile);
-//			cppFile.genCpp(distPath + "\\cpp");
+			cppFile = new CppFile(msgFile);
+			cppFile.genCpp(cdistPath);
 		}
 	}
 	

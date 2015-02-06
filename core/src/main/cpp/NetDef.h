@@ -16,22 +16,133 @@ typedef long long int64;
 
 const int BUF_SIZE = 1024 * 10;
 
-#define Writeint64(buf,data) memcpy(buf,&data,8); buf += 8;
-#define Writeint(buf,data)	memcpy(buf,&data,4); buf += 4;
-#define Writeint16(buf,data) memcpy(buf,&data,2); buf += 2;
-#define Writeint8(buf,data)	memcpy(buf,&data,1); buf += 1;
-#define Writestring(buf,data) {int len = data.length(); Writeint16(buf,len); memcpy(buf,data.c_str(),len); buf += len;}
-#define WriteArray(buf,t, data) { int len=data.size(); Writeint16(buf,len); for(int i=0;i<len;i++){ Write##t(buf,data[i]); }  }
+// =====================================================
+//			write data to buffer define
+// =====================================================
+#define 
+Writebool(buf, data)
+{
+	memcpy(buf, (&data ? 1 : 0), 1); 
+	buf += 1;
+}
+#define 
+Writeint8(buf, data)
+{
+	memcpy(buf, &data, 1); 
+	buf += 1;
+}
+#define 
+Writeint16(buf, data)
+{
+	memcpy(buf, &data, 2); 
+	buf += 2;
+}
+#define 
+Writeint(buf, data)	
+{
+	memcpy(buf, &data, 4); 
+	buf += 4;
+}
+#define 
+Writeint64(buf, data) 
+{
+	memcpy(buf, &data, 8); 
+	buf += 8;
+}
+#define 
+Writefloat(buf, data) 
+{
+	memcpy(buf, &data, 4); 
+	buf += 4;
+}
+#define 
+Writedouble(buf, data) 
+{
+	memcpy(buf, &data, 8); 
+	buf += 8;
+}
+#define Writestring(buf, data) 
+{
+	int len = data.length(); 
+	Writeint16(buf, len); 
+	memcpy(buf, data.c_str(), len); 
+	buf += len;
+}
+#define WriteArray(buf, t, data) 
+{ 
+	int len=data.size(); 
+	Writeint16(buf, len); 
+	for(int i=0; i<len; i++) {
+		Write##t(buf, data[i]); 
+	}
+}
 
-#define Readint(buf,data)	data =*((int*)(buf)); buf += 4;
 
-#define Readint64(buf,data) memcpy(&data,buf,8); buf += 8;
-#define Readint16(buf,data) data =*((short*)(buf)); buf += 2;
-#define Readint8(buf,data)	data =*((signed char*)(buf)); buf += 1;
-#define Readstring(buf,data) {int len; Readint16(buf,len); data.append(buf,len); buf+=len; }
+// =====================================================
+//			reader data from buffer define
+// =====================================================
+#define 
+Readbool(buf, data)
+{
+	data = (*((char*)(buf)) == 1) : true : false; 
+	buf += 1;
+}
+#define 
+Readint8(buf, data)
+{
+	data =*((signed char*)(buf)); 
+	buf += 1;
+}
+#define Readint16(buf, data) 
+{
+	data =*((short*)(buf)); 
+	buf += 2;
+}
+#define 
+Readint(buf, data)
+{
+	data =*((int*)(buf)); 
+	buf += 4;
+}
+#define
+Readint64(buf, data)
+{
+	memcpy(&data, buf, 8); 
+	buf += 8;
+}
+#define 
+Readfloat(buf, data)
+{
+	data =*((float*)(buf)); 
+	buf += 4;
+}
+#define 
+Readdouble(buf, data)
+{
+	memcpy(&data, buf, 8); 
+	buf += 8;
+}
+#define Readstring(buf, data) 
+{
+	int len; 
+	Readint16(buf, len); 
+	data.append(buf, len); 
+	buf+=len; 
+}
+#define ReadArray(buf, t, data) 
+{
+	int len; 
+	Readint16(buf, len); 
+	data.resize(len); 
+	for(int i=0; i<len; i++) {
+		Read##t(buf, data[i]);
+	}  
+}
 
-#define ReadArray(buf,t,data) {int len; Readint16(buf,len); data.resize(len); for(int i=0;i<len;i++){Read##t(buf,data[i]);}  }
 
+// =====================================================
+//			net service eventdefine
+// =====================================================
 #define BEING_DEAL()	int cmd; Readint16(data,cmd); switch(cmd) {
 #define CMD_DEAL(cmd)	case MSG_##cmd:{	pk::cmd a; Read##cmd(data,a); pk::On##cmd(&a);		}break;
 #define END_DEAL()		}

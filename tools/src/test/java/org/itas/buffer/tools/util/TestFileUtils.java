@@ -12,8 +12,9 @@ public class TestFileUtils {
 	@Test
 	public void testGetFiles() {
 		List<File> files = FileUtils.getFiles("./bin/", "*.msg");
-		Assert.assertEquals(1, files.size());
-		Assert.assertEquals("Test.msg", files.get(0).getName());
+		Assert.assertEquals(2, files.size());
+		Assert.assertEquals("LoginInfo.msg", files.get(0).getName());
+		Assert.assertEquals("TComm.msg", files.get(1).getName());
 
 		files = FileUtils.getFiles("./bin/", "*.text");
 		Assert.assertEquals(1, files.size());

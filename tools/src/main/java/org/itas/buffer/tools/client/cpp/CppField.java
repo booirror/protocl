@@ -2,17 +2,17 @@ package org.itas.buffer.tools.client.cpp;
 
 import java.util.EnumMap;
 
+import org.itas.buffer.tools.AbstreactFieldType;
 import org.itas.buffer.tools.MsgField;
 import org.itas.buffer.tools.MsgFiledType.FieldType;
 
-public class CppField  {
+public class CppField extends AbstreactFieldType {
 	
 	private static final EnumMap<FieldType, String> CPP_TYPE = new EnumMap<FieldType, String>(FieldType.class) {
 		private static final long serialVersionUID = -6861525540105806338L;
-
 		{
 			put(FieldType.BOOL, "bool");
-			put(FieldType.INT8, "byte");
+			put(FieldType.INT8, "char");
 			put(FieldType.INT16, "short");
 			put(FieldType.INT, "int");
 			put(FieldType.INT64, "long long");
@@ -30,11 +30,24 @@ public class CppField  {
 		this.msgField = msgField;
 	}
 
-	public String getDefinedType() {
-		if (msgField.getDefClassType() == FieldType.MESSAGE) {
-			return msgField.getDefFieldName();
+	@Override
+	public String getVectorGenericClassTypeName() {
+		if (msgField.getDefClassType() != FieldType.VECTOR) {
+			return null;
 		}
 		
-		return CPP_TYPE.get(msgField.getDefClassType());
+		switch (msgField.getDefGenericClassType()) {
+		case MESSAGE:  return msgField.getDefGenericClassTypeName();
+		default:	   return CPP_TYPE.get(msgField.getDefGenericClassType());
+		}
+	}
+	
+	@Override
+	public String getWholeDefineClassTypeName() {
+		switch (msgField.getDefClassType()) {
+		case VECTOR:  return "vector<" + getVectorGenericClassTypeName() + '>';
+		case MESSAGE: return msgField.getDefClassTypeName();
+		default:	  return CPP_TYPE.get(msgField.getDefClassType());
+		}
 	}
 }

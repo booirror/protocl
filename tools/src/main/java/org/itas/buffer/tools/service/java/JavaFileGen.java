@@ -78,6 +78,7 @@ public class JavaFileGen {
 		}
 		
 		file = new File(desPath + '/' + msgFile.getPackageName() + '/' + msgFile.getMsgFileName(true) + ".java");
+		System.out.println(file.getAbsolutePath());
 		if (file.exists()) {
 			file.delete();
 		}
@@ -104,7 +105,7 @@ public class JavaFileGen {
 		eventBuffer.append(eventImports());
 		
 		eventBuffer.append(nextLine(2, 0));
-		eventBuffer.append(String.format("public abstract class %sEvent<T> extends Dispatch<T> {", msgFile.getMsgFileName(true)));
+		eventBuffer.append(String.format("public abstract class %sEvent<T> extends NetService<T> {", msgFile.getMsgFileName(true)));
 		
 
 		StringBuffer dispatch = new StringBuffer();
@@ -131,8 +132,9 @@ public class JavaFileGen {
 		dispatch.append(nextLine(1, 1));
 		dispatch.append("}");
 		
-		eventBuffer.append(abstrBuf.toString());
+		eventBuffer.append(defPREFIXMethod());
 		eventBuffer.append(dispatch.toString());
+		eventBuffer.append(abstrBuf.toString());
 		eventBuffer.append("\n\n}");
 		
 		
@@ -166,6 +168,21 @@ public class JavaFileGen {
 		return dispatch.toString();
 	}
 	
+	String defPREFIXMethod() {
+		StringBuilder builder = new StringBuilder();
+
+		builder.append(nextLine(2, 1));
+		builder.append("@Override");
+		builder.append(nextLine(1, 1));
+		builder.append("public final byte PREFIX() {");
+		builder.append(nextLine(1, 2));
+		builder.append(String.format("return %s.PREFIX;", msgFile.getMsgFileName(true)));
+		builder.append(nextLine(1, 1));
+		builder.append("}");
+		
+		return builder.toString();
+	}
+	
 	private String javaPackageName() {
 		return String.format("package %s;", msgFile.getPackageName().replace('/', '.'));
 	}
@@ -176,7 +193,7 @@ public class JavaFileGen {
 		builder.append(nextLine(1, 0));
 		for (String impt : msgFile.getImports()) {
 			builder.append(nextLine(1, 0));
-			builder.append(String.format("import %s;", impt.replace('/', '.')));
+			builder.append(String.format("import %s.*;", impt.replace('/', '.')));
 		}
 		
 		
@@ -204,7 +221,7 @@ public class JavaFileGen {
 		imports.add("org/itas/buffer/BubferBuilder");
 		imports.add("org/itas/buffer/AbstractMessage");
 
-		eventImports.add("org/itas/buffer/Dispatch");
+		eventImports.add("org/itas/buffer/NetService");
 		eventImports.add("java/nio/ByteBuffer");
 		
 		for (MsgBody body : msgFile.getMsgBodys()) {

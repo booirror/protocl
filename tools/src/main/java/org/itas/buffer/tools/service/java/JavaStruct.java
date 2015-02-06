@@ -99,7 +99,7 @@ public class JavaStruct {
 	
 	private String defineField() {
 		StringBuffer fieldBuf = new StringBuffer();
-		fieldBuf.append(nextLine(2, 0));
+		fieldBuf.append(nextLine(1, 0));
 		
 		JavaFieldGen javaField;
 		for (MsgField field : classInfo.getMsgFields()) {
@@ -159,7 +159,7 @@ public class JavaStruct {
 			builder.append(nextLine(2, 1));
 			builder.append("@Override");
 			builder.append(nextLine(1, 1));
-			builder.append("public byte SUFFIX() {");
+			builder.append("public final byte SUFFIX() {");
 			builder.append(nextLine(1, 2));
 			builder.append("return SUFFIX;");
 			builder.append(nextLine(1, 1));

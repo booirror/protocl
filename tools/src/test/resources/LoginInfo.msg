@@ -1,5 +1,5 @@
 package org/itas;
-import java/nio/ByteBuffer;
+import org/itas/TComm;
 
 // -> client to server
 // <- server to client
@@ -8,6 +8,8 @@ import java/nio/ByteBuffer;
 ///////////////////系统提示////////////////////
 message Wife {
 	string nickname;
+	Chirld chirld;
+	vector<Chirld> chirlds;
 }
 
 message Player

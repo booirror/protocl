@@ -622,9 +622,9 @@ public class TestJavaFieldGen {
 			Assert.assertEquals("", javaField.addAllVectorMethod());
 			
 			Assert.assertEquals("", javaField.setVectorMethod());
-			
 		}
 	}
+	
 	
 	@Test
 	public void testDispatch() {
