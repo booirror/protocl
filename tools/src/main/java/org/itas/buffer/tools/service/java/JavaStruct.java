@@ -80,10 +80,10 @@ public class JavaStruct {
 		if (classInfo.isTypeExist(MsgStatus.SERVER_TO_CLIENT) || classInfo.isTypeExist(MsgStatus.CLIENT_TO_SERVER)) {
 			buffer.append(" implements");
 			if (classInfo.isTypeExist(MsgStatus.CLIENT_TO_SERVER)) {
-				buffer.append(" NetRecivedAble,");
+				buffer.append(" RecivedAble,");
 			}
 			if (classInfo.isTypeExist(MsgStatus.SERVER_TO_CLIENT)) {
-				buffer.append(" NetSendAble,");
+				buffer.append(" SendAble,");
 			}
 			
 			buffer.deleteCharAt(buffer.length() - 1);

@@ -105,7 +105,7 @@ public class JavaFileGen {
 		eventBuffer.append(eventImports());
 		
 		eventBuffer.append(nextLine(2, 0));
-		eventBuffer.append(String.format("public abstract class %sEvent<T> extends NetService<T> {", msgFile.getMsgFileName(true)));
+		eventBuffer.append(String.format("public abstract class %sEvent<T> extends Service<T> {", msgFile.getMsgFileName(true)));
 		
 
 		StringBuffer dispatch = new StringBuffer();
@@ -221,17 +221,17 @@ public class JavaFileGen {
 		imports.add("org/itas/buffer/BubferBuilder");
 		imports.add("org/itas/buffer/AbstractMessage");
 
-		eventImports.add("org/itas/buffer/NetService");
+		eventImports.add("org/itas/buffer/Service");
 		eventImports.add("java/nio/ByteBuffer");
 		
 		for (MsgBody body : msgFile.getMsgBodys()) {
 			if (body.isTypeExist(MsgStatus.CLIENT_TO_SERVER)) {
-				imports.add("org/itas/buffer/NetRecivedAble");
+				imports.add("org/itas/buffer/RecivedAble");
 				eventImports.add(msgFile.getPackageName() + "/" + msgFile.getMsgFileName(true) + "/*");
 			}
 			
 			if (body.isTypeExist(MsgStatus.CLIENT_TO_SERVER)) {
-				imports.add("org/itas/buffer/NetSendAble");
+				imports.add("org/itas/buffer/SendAble");
 			}
 			
 			for (MsgField field : body.getMsgFields()) {

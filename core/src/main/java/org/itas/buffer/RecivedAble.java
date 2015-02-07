@@ -5,6 +5,6 @@ package org.itas.buffer;
  * @author liuzhen(liuxing521a@gmail.com)
  * @crateTime 2015年2月2日下午3:26:31
  */
-public interface NetRecivedAble extends NetAble {
+public interface RecivedAble extends NetAble {
 
 }

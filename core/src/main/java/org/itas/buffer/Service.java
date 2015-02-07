@@ -7,7 +7,7 @@ import java.nio.ByteBuffer;
  * @author liuzhen<liuxing521a@163.com>
  * @date 2014-3-13
  */
-public abstract class NetService<T> {
+public abstract class Service<T> {
 	
 	
 	/**
