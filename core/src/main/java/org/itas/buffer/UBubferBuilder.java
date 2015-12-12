@@ -3,31 +3,71 @@ package org.itas.buffer;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
-public class BubferBuilder {
+public class UBubferBuilder {
 	
-	/**
-	 * java.nio.ByteBuffer
-	 */
-	private ByteBuffer buffer; // Where we construct the FlatBuffer.
-	
-	/**
-	 * byte order
-	 */
+	/** byte order */
 	private ByteOrder order;
-	
-	public BubferBuilder(int size) {
-		this(size, ByteOrder.LITTLE_ENDIAN);
+	/** java.nio.ByteBuffer  */
+	private ByteBuffer buffer;
+
+	public static UBubferBuilder allocate(int capacity) {
+		return new UBubferBuilder(capacity, ByteOrder.LITTLE_ENDIAN);
 	}
 
-	public BubferBuilder(int size, ByteOrder order) {
+	public static UBubferBuilder allocate(int capacity, ByteOrder order) {
+		return new UBubferBuilder(capacity, order);
+	}
+
+	public static UBubferBuilder wrap(byte[] bytes) {
+		int capacity = bytes.length;
+		if (capacity <= 0)
+			capacity = 4;
+
+		UBubferBuilder builder = allocate(capacity);
+		builder.buffer = ByteBuffer.wrap(bytes);
+		return builder;
+	}
+
+	public static UBubferBuilder wrap(ByteBuffer buffer) {
+		int capacity = buffer.capacity();
+		if (capacity <= 0)
+			capacity = 4;
+
+		UBubferBuilder builder = allocate(capacity);
+		builder.buffer = buffer;
+		return builder;
+	}
+
+	private UBubferBuilder(int size, ByteOrder order) {
 		this.order = order;
-		this.buffer = newByteBuffer(size <= 0 ? 1 : size);
+		if (size <= 0)
+			size = 4;
+		this.buffer = newByteBuffer(size);
 	}
 	
-	public ByteBuffer toBuffer() {
+	public ByteBuffer toByteBuffer() {
 		return buffer;
 	}
-	
+
+	public byte[] toByteArray() {
+		ByteBuffer cur = buffer.duplicate();
+		cur.flip();
+
+		byte[] bytes = new byte[cur.limit()];
+		cur.get(bytes);
+
+		return bytes;
+	}
+
+	public boolean readBool() {
+		byte value = buffer.get();
+		return (value == 0) ? false : true;
+	}
+
+	public byte readByte() {
+		return buffer.get();
+	}
+
 	public void addBytes(byte[] bs) {
 		prep(bs.length);
 		buffer.put(bs);
@@ -97,13 +137,6 @@ public class BubferBuilder {
 		}
 	}
 
-	private ByteBuffer newByteBuffer(int capacity) {
-		ByteBuffer newbb = ByteBuffer.allocate(capacity);
-		newbb.order(order);
-		
-		return newbb;
-	}
-
 	private ByteBuffer growByteBuffer(ByteBuffer bb) {
 		int old_buf_size = bb.capacity();
 		int new_buf_size = old_buf_size << 1;
@@ -117,5 +150,12 @@ public class BubferBuilder {
 		nbb.position(new_buf_size - old_buf_size);
 		nbb.put(bb);
 		return nbb;
+	}
+
+	private ByteBuffer newByteBuffer(int capacity) {
+		ByteBuffer newbb = ByteBuffer.allocate(capacity);
+		newbb.order(order);
+
+		return newbb;
 	}
 }
