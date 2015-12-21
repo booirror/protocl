@@ -2,7 +2,7 @@ allprojects {
 	apply plugin: "java"
     apply plugin: "eclipse"
     
-    [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+    [compileJava, compileTestJava]*.options*.encoding = "UTF-8"
 	eclipse {
     	jdt {
         	sourceCompatibility = 1.8
@@ -15,16 +15,18 @@ allprojects {
     }
     
       repositories {
-    	//maven { url 'http://127.0.0.1:8081/nexus/content/repositories/libs/' } 
+    	//maven { url "http://127.0.0.1:8081/nexus/content/repositories/libs/" } 
 		maven {url "http://maven.oschina.net/content/groups/public/"}
      	mavenCentral()
     }
 }
 
 subprojects {
- version = '1.0.1'
+	group = "com.uxuan.protobuf"
+	version = "1.0.1"
+	
     ext {
-        appName = 'itas-buffer'
+        appName = "protobuf"
     }
     
     dependencies {
@@ -38,6 +40,6 @@ subprojects {
 }
 
 task wrapper(type: Wrapper) {  
-   	gradleVersion = '2.1'  
-	distributionUrl = 'http://192.168.1.200/gradle-2.1-all.zip' 
+   	gradleVersion = "2.1"  
+	distributionUrl = "http://192.168.1.200/gradle-2.1-all.zip" 
 }
