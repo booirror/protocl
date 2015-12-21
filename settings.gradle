@@ -1,1 +1,3 @@
-include 'core', 'tools'
+rootProject.name = "protobuf"
+
+include "core", "tools"

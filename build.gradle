@@ -1,63 +1,41 @@
-buildscript {
-    repositories {
-    	//maven { url 'http://192.168.1.200:8081/nexus/content/groups/public/' }
-    	//maven { url 'http://192.168.1.200:8081/nexus/content/repositories/libs/' } 
-	    mavenCentral()
-	}
-    
-    dependencies {
-    	//compile project(':other_project')
-    	//compile project(path: ':other_project', configuration: 'archives')
-    }
-}
-
 allprojects {
+	apply plugin: "java"
     apply plugin: "eclipse"
-	 apply plugin: "idea"
-
+    
+    [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 	eclipse {
-  	classpath {
-    	downloadSources = true 
-    	downloadJavadoc = false 
-  		}
-	}
-
-    version = '1.0.1'
-    ext {
-        appName = 'itas-buffer'
+    	jdt {
+        	sourceCompatibility = 1.8
+        	targetCompatibility = 1.8
+		}
+        classpath {
+            downloadSources = true
+            downloadJavadoc = false
+        }
     }
-
-    repositories {
-      	//maven { url 'http://192.168.1.200:8081/nexus/content/groups/public/' }
-    	//maven { url 'http://192.168.1.200:8081/nexus/content/repositories/libs/' } 
+    
+      repositories {
+    	//maven { url 'http://127.0.0.1:8081/nexus/content/repositories/libs/' } 
+		maven {url "http://maven.oschina.net/content/groups/public/"}
      	mavenCentral()
     }
 }
 
-project(":core") {
-    apply plugin: "java"
-
+subprojects {
+ version = '1.0.1'
+    ext {
+        appName = 'itas-buffer'
+    }
+    
     dependencies {
-		compile ('junit:junit:4.9')
-		
-		//runtime()
-		//testCompile()
-		//testRuntime()
+		compile("com.uxuan:uxuan-common:1.0.1"){  transitive=false }
+        testCompile("junit:junit:4.11") {
+            exclude(group:"org.hamcrest", module:"hamcrest-core")
+        }
+        //runtime("ch.qos.logback:logback-classic:1.1.2")
+        //testRuntime("ch.qos.logback:logback-core:1.1.2")
     }
 }
-
-project(":tools") {
-    apply plugin: "java"
-
-    dependencies {
-		compile ('junit:junit:4.9')
-		
-		//runtime()
-		//testCompile()
-		//testRuntime()
-    }
-}
-
 
 task wrapper(type: Wrapper) {  
    	gradleVersion = '2.1'  

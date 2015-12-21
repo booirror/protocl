@@ -1,50 +1,46 @@
-apply plugin: "java"
-//apply plugin: 'maven'
+apply plugin: 'maven'
 
-sourceCompatibility = 1.8
-[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
-//sourceSets.main.java.srcDirs = [ 'src/main/java/', 'src/main/tool/']
+ext {
+	archiveBaseName = "protobuf-core"
+}
 
-eclipse.project {
-    name = appName + '-tools'
+eclipse {
+    project.name = archiveBaseName
+}
+
+dependencies {
+  	compile("ch.qos.logback:logback-classic:1.1.2") {  transitive=false }
+    compile("ch.qos.logback:logback-core:1.1.2") {  transitive=false }
+    compile("org.slf4j:slf4j-api:1.6.6") {  transitive=false }
 }
 
 jar {
-	baseName = 'itas-buffer-protoc'
-	include('org/itas/buffer/tools/**')
-	
-	manifest {
-	    attributes 'Main-Class': 'com.godwan.code.GenCode' 
-	    attributes 'title': 'utils' 
-	    attributes 'version': version
-	 	attributes 'createTime': new Date() 
-	}
+    baseName = archiveBaseName
+	dependsOn classes 
+	exclude("com/itans/core/**/*Test*") 
+	//include("com/itans/core/**/*Test*") 
+	manifest{attributes "title": archiveBaseName, "version": version, "createTime": new Date()} 
 }
 
-/*jar {
- 	baseName = 'protocl'
-	manifest {
-	    attributes 'Main-Class': 'com.godwan.code.GenCode' 
-	    attributes 'title': 'utils' 
-	    attributes 'version': version
-	 	attributes 'createTime': new Date() 
-	}
-	
-	from('build/classes/main')
-	dependsOn classes 
-    include('com/godwan/code/**')
-    
-    from {
-		configurations.compile.collect{
-			it.isDirectory() ? it : zipTree(it)
-		}
-		configurations.runtime.collect {
-			it.isDirectory() ? it : zipTree(it)
-		}
-	}
-	
-	doLast {
-        file('build/libs/code-1.0.1.jar').renameTo(file('build/libs/protoc.jar'))
-    }
-	
-}*/
+task sourcesJar(type: Jar) {  
+	baseName archiveBaseName
+    classifier = "sources" 
+    destinationDir = file("build/libs") 
+    exclude("com/itans/core/**/*Test*")  
+    from sourceSets.main.allSource  
+} 
+
+artifacts {
+	archives jar
+	archives sourcesJar
+	archives file("build/libs/" + archiveBaseName + "-" + version + ".jar")
+	archives file("build/libs/" + archiveBaseName + "-" + version + "-sources.jar")
+}
+
+uploadArchives {
+	repositories.mavenDeployer {
+		repository(id : "libs", url : "http://192.168.1.250:8081/nexus/content/repositories/libs") {
+  			authentication (userName : "deployment", password : "deployment")
+    	}
+  	}
+}
