@@ -1,5 +1,6 @@
 allprojects {
 	apply plugin: "java"
+    apply plugin: "idea"
     apply plugin: "eclipse"
     
     [compileJava, compileTestJava]*.options*.encoding = "UTF-8"
@@ -30,10 +31,13 @@ subprojects {
     }
     
     dependencies {
-		compile("com.uxuan:uxuan-common:1.0.1"){  transitive=false }
+		//compile("com.uxuan:uxuan-common:1.0.1")
+        testCompile("junit:junit:4.12")
+        /*
+        compile("com.uxuan:uxuan-common:1.0.1"){  transitive=false }
         testCompile("junit:junit:4.11") {
             exclude(group:"org.hamcrest", module:"hamcrest-core")
-        }
+        }*/
         //runtime("ch.qos.logback:logback-classic:1.1.2")
         //testRuntime("ch.qos.logback:logback-core:1.1.2")
     }

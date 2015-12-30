@@ -1,12 +1,13 @@
 apply plugin: "maven"
 
 ext {
-	archiveBaseName = "protobuf-core"
+	archiveBaseName = "protobuf-generate"
 }
 
 eclipse {
     project.name = archiveBaseName
 }
+
 
 dependencies {
   	compile("ch.qos.logback:logback-classic:1.1.2") {  transitive=false }
