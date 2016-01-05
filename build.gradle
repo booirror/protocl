@@ -32,7 +32,7 @@ subprojects {
     
     dependencies {
 		//compile("com.uxuan:uxuan-common:1.0.1")
-        testCompile("junit:junit:4.12")
+        testCompile("junit:junit:4.11")
         /*
         compile("com.uxuan:uxuan-common:1.0.1"){  transitive=false }
         testCompile("junit:junit:4.11") {
@@ -41,6 +41,22 @@ subprojects {
         //runtime("ch.qos.logback:logback-classic:1.1.2")
         //testRuntime("ch.qos.logback:logback-core:1.1.2")
     }
+    
+	task afterEclipseImport(description: "", group: "IDE") {
+		doLast {
+	    	def classpath = new XmlParser().parse(file(".classpath"))
+	    	classpath.children().forEach {
+	    		def atts = it.attributes()
+	    		if (atts.get("kind") == "output") 
+	    		atts.put("path", "build/classes")
+	    	}
+	    	
+	    	def writer = new FileWriter(file(".classpath"))
+	    	def printer = new XmlNodePrinter(new PrintWriter(writer))
+	    	printer.setPreserveWhitespace(true)
+	    	printer.print(classpath)
+	  	}
+ 	}
 }
 
 task wrapper(type: Wrapper) {  

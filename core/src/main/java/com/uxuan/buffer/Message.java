@@ -1,19 +1,26 @@
-//package com.uxuan.buffer;
+package com.uxuan.buffer;
+
+import java.lang.reflect.Constructor;
+import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
+import java.util.*;
+
+/**
+ * message
+ *
+ * @author  liuzhen
+ * Email liuxing521a@163.com
+ * CreateTime 201６-01-04 20:32:12
+ */
+public abstract class Message {
+
+	private static final Charset encoding = Charset.forName("UTF-8");
+
+	protected Message() {
+	}
+
 //
-//import java.lang.reflect.Constructor;
-//import java.nio.ByteBuffer;
-//import java.nio.charset.Charset;
-//import java.util.*;
-//
-//public abstract class UMessage {
-//
-//	private static final Charset encoding = Charset.forName("UTF-8");
-//
-//	protected UMessage() {
-//	}
-//
-//
-//	public abstract UMessage readMessage(UBubferBuilder buf);
+//	public abstract Message readMessage(UBubferBuilder buf);
 //
 //	public abstract void writeMessage(UBubferBuilder buf);
 //
@@ -21,63 +28,7 @@
 //
 //	public abstract ByteBuffer toByteBuffer();
 //
-//	interface ReadAble {
 //
-//		boolean readBool(UBubferBuilder buf);
-//
-//		char readChar(UBubferBuilder buf);
-//
-//		byte readInt8(UBubferBuilder buf);
-//
-//		short readInt16(UBubferBuilder buf);
-//
-//		int readInt(UBubferBuilder buf);
-//
-//		int readInt32(UBubferBuilder buf);
-//
-//		long readInt64(UBubferBuilder buf);
-//
-//		float readFloat(UBubferBuilder buf);
-//
-//		double readDouble(UBubferBuilder buf);
-//
-//		String readString(UBubferBuilder buf);
-//
-//		<T> Set<T> readSet(UBubferBuilder buf);
-//
-//		<T> List<T> readArray(UBubferBuilder buf);
-//
-//		<K, V> Map<K, V> readMap(UBubferBuilder buf);
-//	}
-//
-//	interface WriteAble {
-//
-//		void writeBool(UBubferBuilder buf);
-//
-//		char writeChar(UBubferBuilder buf);
-//
-//		byte writeInt8(UBubferBuilder buf);
-//
-//		short writeInt16(UBubferBuilder buf);
-//
-//		int writeInt(UBubferBuilder buf);
-//
-//		int writeInt32(UBubferBuilder buf);
-//
-//		long writeInt64(UBubferBuilder buf);
-//
-//		float writeFloat(UBubferBuilder buf);
-//
-//		double writeDouble(UBubferBuilder buf);
-//
-//		String writeString(UBubferBuilder buf);
-//
-//		<T> Set<T> writeSet(UBubferBuilder buf);
-//
-//		<T> List<T> writeArray(UBubferBuilder buf);
-//
-//		<K, V> Map<K, V> writeMap(UBubferBuilder buf);
-//	}
 //
 //	protected byte[] readBytes(UBubferBuilder buf, int len) {
 //		byte[] bs = new byte[len];
@@ -135,8 +86,8 @@
 //				dataList.add(readInt64(buf));
 //			} else if (clazz == String.class) {
 //				dataList.add(readString(buf));
-//			} else if (UMessage.class.isAssignableFrom(clazz)) {
-//				UMessage data = newInstance(clazz);
+//			} else if (Message.class.isAssignableFrom(clazz)) {
+//				Message data = newInstance(clazz);
 //				data.readMsg(buf);
 //				dataList.add(data);
 //			} else {
@@ -198,7 +149,7 @@
 //		writeBytes(builder, bytes);
 //	}
 //
-//	protected void writeArray(UBubferBuilder builder, List<?> dataList) {
+//	protected void writeArray(UXBuilder builder, List<?> dataList) {
 //		if (dataList == null) {
 //			dataList = Collections.emptyList();
 //		}
@@ -215,24 +166,24 @@
 //				writeInt64(builder, (Long)data);
 //			} else if (data instanceof String) {
 //				writeString(builder, (String)data);
-//			} else if (data instanceof UMessage) {
-//				((UMessage)data).writeMsg(builder);
+//			} else if (data instanceof Message) {
+//				((Message)data).writeMsg(builder);
 //			} else {
 //				throw new RuntimeException("unkown message Type:" + data.getClass().getName());
 //			}
 //		}
 //	}
 //
-//	private UMessage newInstance(Class<?> classType) {
+//	private Message newInstance(Class<?> classType) {
 //		try {
 //			Constructor<?> constructor = classType.getDeclaredConstructor();
 //			if (!constructor.isAccessible()) {
 //				constructor.setAccessible(true);
 //			}
 //
-//			return (UMessage) constructor.newInstance();
+//			return (Message) constructor.newInstance();
 //		} catch (Exception e) {
 //			throw new RuntimeException("创建实列失败", e);
 //		}
 //	}
-//}
+}

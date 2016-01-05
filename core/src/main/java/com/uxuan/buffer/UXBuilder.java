@@ -18,9 +18,10 @@ public final class UXBuilder {
 	
 	/** byte order */
 	private ByteOrder order;
-
 	/** java.nio.ByteBuffer  */
 	private ByteBuffer buffer;
+	/** 是否完成写操作*/
+	private boolean isFinish;
 
 	public static UXBuilder allocate(int capacity) {
 		return new UXBuilder(capacity, ByteOrder.LITTLE_ENDIAN);
@@ -31,21 +32,12 @@ public final class UXBuilder {
 	}
 
 	public static UXBuilder wrap(byte[] bytes) {
-		int capacity = bytes.length;
-		if (capacity <= 0)
-			capacity = 4;
-
-		UXBuilder builder = allocate(capacity);
-		builder.buffer = ByteBuffer.wrap(bytes);
-		return builder;
+		return wrap(ByteBuffer.wrap(bytes));
 	}
 
 	public static UXBuilder wrap(ByteBuffer buffer) {
-		int capacity = buffer.capacity();
-		if (capacity <= 0)
-			capacity = 4;
-
-		UXBuilder builder = allocate(capacity);
+		UXBuilder builder = allocate(buffer.capacity());
+		builder.order = buffer.order();
 		builder.buffer = buffer;
 		return builder;
 	}
@@ -56,16 +48,23 @@ public final class UXBuilder {
 			size = 4;
 		this.buffer = newBuf(size);
 	}
-	
-	public ByteBuffer toByteBuffer() {
+
+
+	/**
+	 * 转成ByteBuffer
+	 *
+	 * @return {@link java.nio.ByteBuffer}
+     */
+	public ByteBuffer toBuffer() {
 		return buffer.duplicate();
 	}
 
-	public void finishWirte() {
-		buffer.flip();
-	}
-
-	public byte[] toByteArray() {
+	/**
+	 * 转成byte数组
+	 *
+	 * @return byte数组
+     */
+	public byte[] toArray() {
 		ByteBuffer cur = buffer.duplicate();
 		cur.flip();
 
@@ -75,68 +74,148 @@ public final class UXBuilder {
 		return bytes;
 	}
 
-	protected int position() {
-		return buffer.position();
+	public UXBuilder finishWirte() {
+		buffer.flip();
+		return this;
 	}
 
+	/**
+	 * 读取boolean值
+	 *
+	 * @return this buffer
+	 */
 	public boolean readBool() {
 		byte value = readInt8();
 		return value == 1 ? true : false;
 	}
 
+	/**
+	 * 指定位置读取boolean值
+	 *
+	 * @param index 读取位置
+	 * @return this buffer
+	 */
 	public boolean readBool(int index) {
 		byte value = readInt8(index);
 		return value == 1 ? true : false;
 	}
 
+	/**
+	 * 读取char值
+	 *
+	 * @return this buffer
+	 */
 	public char readChar() {
 		return buffer.getChar();
 	}
 
+	/**
+	 * 指定位置读取char值
+	 *
+	 * @param index 读取位置
+	 * @return this buffer
+	 */
 	public char readChar(int index) {
 		return buffer.getChar(index);
 	}
 
+	/**
+	 * 读取byte值
+	 *
+	 * @return this buffer
+	 */
 	public byte readInt8() {
 		return buffer.get();
 	}
+
+	/**
+	 * 指定位置读取byte值
+	 *
+	 * @param index 读取位置
+	 * @return this buffer
+	 */
 	public byte readInt8(int index) {
 		return buffer.get(index);
 	}
 
+	/**
+	 * 读取short值
+	 *
+	 * @return this buffer
+	 */
 	public short readInt16() {
 		return buffer.getShort();
 	}
+
+	/**
+	 * 指定位置读取short值
+	 *
+	 * @param index 读取位置
+	 * @return this buffer
+	 */
 	public short readInt16(int index) {
 		return buffer.getShort(index);
 	}
 
+	/**
+	 * 读取int值
+	 *
+	 * @return this buffer
+	 */
 	public int readInt() {
 		return buffer.getInt();
 	}
 
+	/**
+	 * 指定位置读取int值
+	 *
+	 * @param index 读取位置
+	 * @return this buffer
+	 */
 	public int readInt(int index) {
 		return buffer.getInt(index);
 	}
 
+	/**
+	 * 读取long值
+	 *
+	 * @return this buffer
+	 */
 	public long readInt64() {
 		return buffer.getLong();
 	}
 
+	/**
+	 * 指定位置读取long值
+	 *
+	 * @param index 读取位置
+	 * @return this buffer
+	 */
 	public long readInt64(int index) {
 		return buffer.getLong(index);
 	}
 
+	/**
+	 * 读取float值
+	 *
+	 * @return this buffer
+	 */
 	public float readFloat() {
 		return buffer.getFloat();
 	}
 
+	/**
+	 * 指定位置读取float值
+	 *
+	 * @param index 读取位置
+	 * @return this buffer
+     */
 	public float readFloat(int index) {
 		return buffer.getFloat(index);
 	}
 
 	/**
-	 * 读取float值
+	 * 读取double值
 	 *
 	 * @return 读取的double值
      */
@@ -163,6 +242,10 @@ public final class UXBuilder {
 	public String readString() {
 		try {
 			final byte[] bs = readBytes();
+			if (bs == null || bs.length == 0) {
+				return null;
+			}
+
 			return new String(bs, "UTF-8");
 		} catch (UnsupportedEncodingException e) {
 			throw new RuntimeException(e);
@@ -181,7 +264,7 @@ public final class UXBuilder {
 		}
 
 		buffer.mark();
-		int len = buffer.get();
+		int len = buffer.getInt();
 		if (len > buffer.remaining()) {
 			buffer.reset();
 			return null;
@@ -210,7 +293,7 @@ public final class UXBuilder {
 	 * @return this buffer
      */
 	public UXBuilder writeBool(boolean data) {
-		this.writeInt8(data ? 0 : 1);
+		this.writeInt8(data ? 1 : 0);
 		return this;
 	}
 
@@ -222,7 +305,7 @@ public final class UXBuilder {
 	 * @return this buffer
      */
 	public UXBuilder writeBool(int index, boolean data) {
-		this.writeInt8(index, data ? 0 : 1);
+		this.writeInt8(index, data ? 1 : 0);
 		return this;
 	}
 
@@ -419,8 +502,7 @@ public final class UXBuilder {
 	public UXBuilder writeByte(byte[] data) {
 		final int len = data.length;
 		prep(len + 4);
-		buffer.putInt(len);
-		buffer.put(data);
+		buffer.putInt(len).put(data);
 		return this;
 	}
 
@@ -433,7 +515,7 @@ public final class UXBuilder {
 	 * @param size 要存入缓存数据长度
      */
 	protected void prep(int size) {
-		while (buffer.position() + size < buffer.capacity()) {
+		while (buffer.position() + size > buffer.capacity()) {
 			buffer = grow(buffer);
 		}
 	}
@@ -455,10 +537,10 @@ public final class UXBuilder {
 			throw new AssertionError("can't grow buffer beyond 64M.");
 		}
 
-		buffer.position(0);
+		buffer.flip();
 		ByteBuffer nbb = newBuf(new_buf_size);
-		nbb.position(new_buf_size - old_buf_size);
 		nbb.put(buffer);
+
 		return nbb;
 	}
 
@@ -473,13 +555,5 @@ public final class UXBuilder {
 		newbb.order(order);
 
 		return newbb;
-	}
-
-	public static void main(String[] args) {
-		ByteBuffer buf = ByteBuffer.allocate(8);
-		buf.putInt(399);
-
-		ByteBuffer buqf = ByteBuffer.allocate(8);
-		buqf.put(buf);
 	}
 }
