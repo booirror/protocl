@@ -1,4 +1,5 @@
 package org/itas;
+
 import org/itas/TComm;
 
 message Wife {
@@ -12,7 +13,7 @@ message Player
 	bool merry;
 	int8 chirld;
 	int16 age;
-	int whifes;
+	int32 whifes;
 	int64 phoneNum;
 	float credit;
 	double money
@@ -25,17 +26,17 @@ message Player
 }
 
 
-message PlayerRequest ->
+message PlayerRequest
 {
 	Player player;			
 }
 
-message PlayerResponse <-
+message PlayerResponse
 {
 	Player player;
 }
 
-message PlayerInfo <->
+message PlayerInfo
 {
 	Player player;
 }
