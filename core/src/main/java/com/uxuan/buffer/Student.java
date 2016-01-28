@@ -4,9 +4,8 @@ import java.nio.ByteBuffer;
 
 /**
  * @author liuzhen
- *         <p/>
- *         Email liuxing521a@163.com
- *         CreatedTime 2016-01-05 22:40:00
+ * Email liuxing521a@163.com
+ * CreatedTime 2016-01-05 22:40:00
  */
 public class Student extends Message {
 
@@ -45,7 +44,7 @@ public class Student extends Message {
     }
 
     public byte[] toArray() {
-        final UXBuilder builder = UXBuilder.allocate(32)
+        final IoBuf builder = IoBuf.allocate(32)
             .writeInt(userId)
             .writeString(name)
             .writeString(address)
@@ -55,7 +54,7 @@ public class Student extends Message {
     }
 
     public ByteBuffer toBuffer() {
-        final UXBuilder builder = UXBuilder.allocate(32)
+        final IoBuf builder = IoBuf.allocate(32)
             .writeInt(userId)
             .writeString(name)
             .writeString(address)
@@ -69,14 +68,14 @@ public class Student extends Message {
     }
 
     public static Student parseFrom(byte[] bs) {
-        return parseBuffer(UXBuilder.wrap(bs));
+        return parseBuffer(IoBuf.wrap(bs));
     }
 
     public static Student parseFrom(ByteBuffer buffer) {
-        return parseBuffer(UXBuilder.wrap(buffer));
+        return parseBuffer(IoBuf.wrap(buffer));
     }
 
-    private static Student parseBuffer(UXBuilder buder) {
+    private static Student parseBuffer(IoBuf buder) {
         Student student = Student.newBuilder();
 
         student.userId = buder.readInt();
@@ -85,7 +84,6 @@ public class Student extends Message {
 
         return student;
     }
-
 
     @Override
     public String toString() {
@@ -98,4 +96,24 @@ public class Student extends Message {
 
         return builder.toString();
     }
+
+	@Override
+	public Student readMsg(IoBuf buf) {
+		this.userId = buf.readInt();
+		this.name = buf.readString();
+		this.address = buf.readString();
+		return this;
+	}
+
+	@Override
+	public void writeMsg(IoBuf buf) {
+		buf.writeInt(userId);
+		buf.writeString(name);
+		buf.writeString(address);
+	}
+
+	@Override
+	public Message clone() {
+		return new Student();
+	}
 }

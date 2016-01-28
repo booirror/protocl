@@ -1,11 +1,6 @@
 package org/itas;
 import org/itas/TComm;
 
-// -> client to server
-// <- server to client
-// <-> client & server
-
-///////////////////系统提示////////////////////
 message Wife {
 	string nickname;
 	Chirld chirld;
@@ -26,7 +21,7 @@ message Player
 	vector<int8> chirldAges;
 	vector<string> chirldNames;
 	vector<Wife> wifs;
-	Wife wife;
+	object<Wife> wife;
 }
 
 

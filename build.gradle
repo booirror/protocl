@@ -23,11 +23,11 @@ allprojects {
 }
 
 subprojects {
-	group = "com.uxuan.protobuf"
+	group = "com.uxuan.protocl"
 	version = "1.0.1"
 	
     ext {
-        appName = "protobuf"
+        appName = "protocl"
     }
     
     dependencies {

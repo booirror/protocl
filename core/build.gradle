@@ -1,7 +1,7 @@
 apply plugin: "maven"
 
 ext {
-	archiveBaseName = "protobuf-java"
+	archiveBaseName = "protocl-core"
 }
 
 eclipse {

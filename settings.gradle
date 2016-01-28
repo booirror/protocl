@@ -1,3 +1,3 @@
-rootProject.name = "protobuf"
+rootProject.name = "protocl"
 
 include "core", "tools"

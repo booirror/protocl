@@ -26,7 +26,7 @@ public class UXBuilderTest {
 
     @Test
     public void testPrep() throws Exception {
-        UXBuilder uXBuilder = UXBuilder.allocate(4);
+        IoBuf uXBuilder = IoBuf.allocate(4);
         uXBuilder.prep(2);
         assertEquals(4, uXBuilder.toBuffer().capacity());
 
@@ -42,7 +42,7 @@ public class UXBuilderTest {
 
     @Test
     public void testGrow() throws Exception {
-        UXBuilder uXBuilder = UXBuilder.allocate(4);
+        IoBuf uXBuilder = IoBuf.allocate(4);
 
         ByteBuffer old = uXBuilder.toBuffer();
         old.put("me".getBytes());
@@ -56,7 +56,7 @@ public class UXBuilderTest {
     @Test
     public void testBool() throws Exception {
         boolean dv = random.nextBoolean();
-        UXBuilder buffer = UXBuilder.allocate(4);
+        IoBuf buffer = IoBuf.allocate(4);
         buffer.writeBool(dv).finishWirte();
 
         assertEquals(dv, buffer.readBool());
@@ -65,7 +65,7 @@ public class UXBuilderTest {
     @Test
     public void testBoolIndex() throws Exception {
         boolean dv = random.nextBoolean();
-        UXBuilder buffer = UXBuilder.allocate(4);
+        IoBuf buffer = IoBuf.allocate(4);
         buffer.writeInt16(1).writeInt64(4);
         buffer.writeBool(3, dv).finishWirte();
 
@@ -75,7 +75,7 @@ public class UXBuilderTest {
     @Test
     public void testChar() throws Exception {
         char dv = (char)random.nextInt(Byte.MAX_VALUE);
-        UXBuilder buffer = UXBuilder.allocate(4);
+        IoBuf buffer = IoBuf.allocate(4);
         buffer.writeChar(dv).finishWirte();
 
         assertEquals(dv, buffer.readChar());
@@ -84,7 +84,7 @@ public class UXBuilderTest {
     @Test
     public void testCharIndex() throws Exception {
         char dv = (char)random.nextInt(Byte.MAX_VALUE);
-        UXBuilder buffer = UXBuilder.allocate(4);
+        IoBuf buffer = IoBuf.allocate(4);
         buffer.writeInt16(1).writeInt64(4);
         buffer.writeChar(3, dv).finishWirte();
 
@@ -94,7 +94,7 @@ public class UXBuilderTest {
     @Test
     public void testInt8() throws Exception {
         byte dv = (byte)random.nextInt(Byte.MAX_VALUE);
-        UXBuilder buffer = UXBuilder.allocate(4);
+        IoBuf buffer = IoBuf.allocate(4);
         buffer.writeInt8(dv).finishWirte();
 
         assertEquals(dv, buffer.readInt8());
@@ -103,7 +103,7 @@ public class UXBuilderTest {
     @Test
     public void testInt8Index() throws Exception {
         byte dv = (byte)random.nextInt(Byte.MAX_VALUE);
-        UXBuilder buffer = UXBuilder.allocate(4);
+        IoBuf buffer = IoBuf.allocate(4);
         buffer.writeInt16(1).writeInt64(4);
         buffer.writeInt8(3, dv).finishWirte();
 
@@ -114,7 +114,7 @@ public class UXBuilderTest {
     @Test
     public void testInt16() throws Exception {
         short dv = (short)random.nextInt(Short.MAX_VALUE);
-        UXBuilder buffer = UXBuilder.allocate(4);
+        IoBuf buffer = IoBuf.allocate(4);
         buffer.writeInt16(dv).finishWirte();
 
         assertEquals(dv, buffer.readInt16());
@@ -123,7 +123,7 @@ public class UXBuilderTest {
     @Test
     public void testInt16Index() throws Exception {
         short dv = (short)random.nextInt(Short.MAX_VALUE);
-        UXBuilder buffer = UXBuilder.allocate(4);
+        IoBuf buffer = IoBuf.allocate(4);
         buffer.writeInt16(1).writeInt64(4);
         buffer.writeInt16(3, dv).finishWirte();
 
@@ -133,7 +133,7 @@ public class UXBuilderTest {
     @Test
     public void testInt32() throws Exception {
         int dv = random.nextInt(Integer.MAX_VALUE);
-        UXBuilder buffer = UXBuilder.allocate(4);
+        IoBuf buffer = IoBuf.allocate(4);
         buffer.writeInt(dv).finishWirte();
 
         assertEquals(dv, buffer.readInt());
@@ -142,7 +142,7 @@ public class UXBuilderTest {
     @Test
     public void testInt32Index() throws Exception {
         int dv = random.nextInt(Integer.MAX_VALUE);
-        UXBuilder buffer = UXBuilder.allocate(4);
+        IoBuf buffer = IoBuf.allocate(4);
         buffer.writeInt(1).writeInt64(4);
         buffer.writeInt(3, dv).finishWirte();
 
@@ -152,7 +152,7 @@ public class UXBuilderTest {
     @Test
     public void testInt64() throws Exception {
         long dv = random.nextLong(Long.MAX_VALUE);
-        UXBuilder buffer = UXBuilder.allocate(4);
+        IoBuf buffer = IoBuf.allocate(4);
         buffer.writeInt64(dv).finishWirte();
 
         assertEquals(dv, buffer.readInt64());
@@ -161,7 +161,7 @@ public class UXBuilderTest {
     @Test
     public void testInt64Index() throws Exception {
         long dv = random.nextLong(Long.MAX_VALUE);
-        UXBuilder buffer = UXBuilder.allocate(4);
+        IoBuf buffer = IoBuf.allocate(4);
         buffer.writeInt64(1L).writeInt64(4);
         buffer.writeInt64(3, dv).finishWirte();
 
@@ -171,7 +171,7 @@ public class UXBuilderTest {
     @Test
     public void testFloat() throws Exception {
         float dv = random.nextFloat();
-        UXBuilder buffer = UXBuilder.allocate(4);
+        IoBuf buffer = IoBuf.allocate(4);
         buffer.writeFloat(dv).finishWirte();
 
         assertEquals(dv, buffer.readFloat(), 0.001F);
@@ -180,7 +180,7 @@ public class UXBuilderTest {
     @Test
     public void testFloatIndex() throws Exception {
         float dv = random.nextFloat();
-        UXBuilder buffer = UXBuilder.allocate(4);
+        IoBuf buffer = IoBuf.allocate(4);
         buffer.writeInt64(1L).writeInt8(4);
         buffer.writeFloat(2, dv).finishWirte();
 
@@ -190,7 +190,7 @@ public class UXBuilderTest {
     @Test
     public void tesDouble() throws Exception {
         double dv = random.nextDouble(0.00, Double.MAX_VALUE);
-        UXBuilder buffer = UXBuilder.allocate(4);
+        IoBuf buffer = IoBuf.allocate(4);
         buffer.writeDouble(dv).finishWirte();
 
         assertEquals(dv, buffer.readDouble(), 0.001D);
@@ -199,7 +199,7 @@ public class UXBuilderTest {
     @Test
     public void tesDoubleIndex() throws Exception {
         double dv = random.nextDouble(0.00, Double.MAX_VALUE);
-        UXBuilder buffer = UXBuilder.allocate(4);
+        IoBuf buffer = IoBuf.allocate(4);
         buffer.writeInt64(1L).writeInt16(4);
         buffer.writeDouble(2, dv).finishWirte();
 
@@ -209,7 +209,7 @@ public class UXBuilderTest {
     @Test
     public void testString() throws Exception {
         String str = UUID.randomUUID().toString();
-        UXBuilder buffer = UXBuilder.allocate(4);
+        IoBuf buffer = IoBuf.allocate(4);
         buffer.writeString(str).finishWirte();
 
         assertEquals(str, buffer.readString());
@@ -218,7 +218,7 @@ public class UXBuilderTest {
     @Test
     public void tesBytes() throws Exception {
         byte[] bs = UUID.randomUUID().toString().getBytes();
-        UXBuilder buffer = UXBuilder.allocate(4);
+        IoBuf buffer = IoBuf.allocate(4);
         buffer.writeByte(bs).finishWirte();
 
         assertArrayEquals(bs, buffer.readBytes());
