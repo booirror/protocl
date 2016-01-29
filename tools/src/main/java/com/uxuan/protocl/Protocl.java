@@ -1,5 +1,6 @@
 package com.uxuan.protocl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -11,6 +12,18 @@ import java.util.List;
 public class Protocl {
 
 	/** 所有解析协议文件*/
-	private List<ProtoclFile> protocls;
+	private final List<ProtoclFile> protocls;
+	
+	public Protocl() {
+		protocls = new ArrayList<ProtoclFile>();
+	}
+	
+	public void addProtocl(ProtoclFile protocl) {
+		protocls.add(protocl);
+	}
+
+	public List<ProtoclFile> getProtocls() {
+		return protocls;
+	}
 	
 }

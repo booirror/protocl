@@ -1,5 +1,7 @@
 package com.uxuan.protocl;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -10,19 +12,25 @@ import java.util.Set;
  * Email liuxing521a@163.com
  * CreateTime 2016年1月28日 下午9:10:06
  */
-public class ProtoclFile {
+public final class ProtoclFile {
 
 	/** 包名*/
 	private String packageName;
 	
 	/** 导入的包 */
-	private Set<String> imports;
+	private final Set<String> imports;
 	
 	/** 消息文件名称*/
-	private String fileName;
+	private final String fileName;
 
 	/** 消息文件包含的消息 */
-	private List<ProtoclMsg> messages;
+	private final List<ProtoclMsg> messages;
+	
+	public ProtoclFile(String fileName) {
+		this.fileName = fileName;
+		this.imports = new HashSet<String>();
+		this.messages = new ArrayList<ProtoclMsg>();
+	}
 
 	/**
 	 * @return the packageName
@@ -35,6 +43,10 @@ public class ProtoclFile {
 	 * @param packageName the packageName to set
 	 */
 	public void setPackageName(String packageName) {
+		if (this.packageName != null) {
+			throw new RuntimeException("file only one package, old:" + this.packageName + ", given:" + packageName);
+		}
+		
 		this.packageName = packageName;
 	}
 
@@ -44,12 +56,14 @@ public class ProtoclFile {
 	public Set<String> getImports() {
 		return imports;
 	}
-
+	
 	/**
-	 * @param imports the imports to set
+	 * 添加导入包
+	 * 
+	 * @param importStr
 	 */
-	public void setImports(Set<String> imports) {
-		this.imports = imports;
+	public void addImport(String importStr) {
+		this.imports.add(importStr);
 	}
 
 	/**
@@ -60,13 +74,6 @@ public class ProtoclFile {
 	}
 
 	/**
-	 * @param fileName the fileName to set
-	 */
-	public void setFileName(String fileName) {
-		this.fileName = fileName;
-	}
-
-	/**
 	 * @return the messages
 	 */
 	public List<ProtoclMsg> getMessages() {
@@ -74,10 +81,33 @@ public class ProtoclFile {
 	}
 
 	/**
-	 * @param messages the messages to set
+	 * 添加导入包
+	 * 
+	 * @param importStr
 	 */
-	public void setMessages(List<ProtoclMsg> messages) {
-		this.messages = messages;
+	public void addMessage(ProtoclMsg msg) {
+		this.messages.add(msg);
 	}
 	
+	@Override
+	public String toString() {
+		StringBuilder buf = new StringBuilder();
+		
+		if (packageName != null) {
+			buf.append("package ").append(packageName).append(";");
+		}
+		
+		buf.append("\n\n");
+		for (String imp : imports) {
+			buf.append("import ").append(imp).append(";");
+		}
+		
+		
+		for (ProtoclMsg msg : messages){
+			buf.append("\n\n");
+			buf.append(msg);
+		}
+		
+		return buf.toString();
+	}
 }

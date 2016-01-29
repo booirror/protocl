@@ -1,5 +1,6 @@
 package com.uxuan.protocl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -11,11 +12,23 @@ import java.util.List;
 public class ProtoclMsg {
 
 	/** message name */
-	private String name;
+	private final String name;
+	
+	private final boolean isEnum;
 	
 	/** message attributes*/
-	private List<ProtoclAttr> attributes;
+	private final List<ProtoclAttr> attributes;
+	
+	public ProtoclMsg(String name, boolean isEnum) {
+		this.name = name;
+		this.isEnum = isEnum;
+		this.attributes = new ArrayList<ProtoclAttr>();;
+	}
 
+	public boolean isEnum() {
+		return isEnum;
+	}
+	
 	/**
 	 * @return the name
 	 */
@@ -24,25 +37,39 @@ public class ProtoclMsg {
 	}
 
 	/**
-	 * @param name the name to set
-	 */
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	/**
 	 * @return the attributes
 	 */
 	public List<ProtoclAttr> getAttributes() {
 		return attributes;
 	}
-
+	
 	/**
-	 * @param attributes the attributes to set
+	 * 添加
+	 * 
+	 * @param attribute
 	 */
-	public void setAttributes(List<ProtoclAttr> attributes) {
-		this.attributes = attributes;
+	public void addAttribute(ProtoclAttr attribute) {
+		this.attributes.add(attribute);
 	}
 	
+	@Override
+	public String toString() {
+		StringBuilder buf = new StringBuilder();
+		if (isEnum) {
+			buf.append("enum ").append(name);
+		} else {
+			buf.append("message ").append(name);
+		}
+		
+		buf.append(" {");
+		for (ProtoclAttr attr : attributes) {
+			buf.append("\n\t").append(attr);
+		}
+		
+		buf.append("\n");
+		buf.append("}");
+		
+		return buf.toString();
+	}
 	
 }

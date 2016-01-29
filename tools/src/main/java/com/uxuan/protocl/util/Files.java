@@ -1,4 +1,4 @@
-package com.uxuan.protocl.parse;
+package com.uxuan.protocl.util;
 
 import java.io.File;
 import java.util.LinkedList;
@@ -6,13 +6,12 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class FileLoading {
+public final class Files {
 
-	public List<File> getFiles(String suffix) {
-		return getFiles("./", suffix);
+	private Files() {
 	}
 
-	public List<File> getFiles(String dir, String suffix) {
+	public static List<File> getFiles(String dir, String suffix) {
 		File file = new File(dir);
 
 		suffix = suffix.replace('.', '#');
@@ -31,7 +30,7 @@ public class FileLoading {
 		return list;
 	}
 
-	private List<File> filePattern(File file, Pattern p) {
+	private static List<File> filePattern(File file, Pattern p) {
 		if (file == null) {
 			return null;
 		}

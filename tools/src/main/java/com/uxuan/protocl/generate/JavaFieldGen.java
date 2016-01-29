@@ -4,51 +4,85 @@ package com.uxuan.protocl.generate;
 import static com.uxuan.protocl.util.StringUtils.firstCharUpCase;
 import static com.uxuan.protocl.util.StringUtils.nextLine;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.uxuan.protocl.ProtoclAttr;
+import com.uxuan.protocl.ProtoclAttr.AttrType;
+import com.uxuan.protocl.SupportType;
 
-import com.uxuan.protocl.AbstreactFieldType;
-import com.uxuan.protocl.DefType;
-import com.uxuan.protocl.MsgBody;
-import com.uxuan.protocl.MsgField;
+public class JavaFieldGen extends SupportType {
 
-public class JavaFieldGen extends AbstreactFieldType {
-	
-	private static final Map<DefType, JavaFiledType> JAVA_TYPE = new HashMap<>() {
-		private static final long serialVersionUID = -6861525540105806338L;
-
-		{
-			put(FieldType.BOOL, new JavaFiledType("boolean", "Boolean"));
-			put(FieldType.INT8, new JavaFiledType("byte", "Byte"));
-			put(FieldType.INT16, new JavaFiledType("short", "Short"));
-			put(FieldType.INT, new JavaFiledType("int", "Integer"));
-			put(FieldType.INT64, new JavaFiledType("long", "Long"));
-			put(FieldType.FLOAT, new JavaFiledType("float", "Float"));
-			put(FieldType.DOUBLE, new JavaFiledType("double", "Double"));
-			put(FieldType.STRING, new JavaFiledType("String", "String"));
-			put(FieldType.VECTOR, new JavaFiledType("List", "List"));
-			put(FieldType.MESSAGE, new JavaFiledType("", ""));
-		}
-	};
-	
-	/**
-	 * 消息body
-	 */
-	private MsgBody msgBody;
-
-	/**
-	 * 消息field
-	 */
-	private MsgField msgField;
+	/** 消息body*/
+	private final ProtoclAttr attr;
 	
 	
-	public JavaFieldGen(MsgBody msgBody, MsgField msgField) {
-		this.msgBody = msgBody;
-		this.msgField = msgField;
+	public JavaFieldGen(ProtoclAttr attr) {
+		super(JavaLanguage.class);
+		this.attr = attr;
 	}
 
-	public String defendField() {
-		return String.format("private %s %s;", getWholeDefineClassTypeName(), msgField.getDefFieldName());
+	public String genAttribute() {
+		return attr.isEnum() ? enumAttr() : fieldAttr();
+	}
+	
+	public String genGetMethod() {
+		return null;
+	}
+	
+	public String genSetMethod() {
+		return null;
+	}
+	
+	public String addMethod() {
+		return null;
+	}
+	
+	public String addAllMethod() {
+		return null;
+	}
+	
+	public String putMethod() {
+		return null;
+	}
+	
+	public String putAllMethod() {
+		return null;
+	}
+	
+	private String enumAttr() {
+		StringBuilder buf = new StringBuilder();
+		buf.append("\n\t");
+		buf.append(attr.getAttrName()).append(" {");
+		buf.append("\n\t\t");
+		buf.append("public int value() {");
+		buf.append("\n\t\t\t");
+		buf.append("return ").append(attr.getAttrIndex()).append(";");
+		buf.append("\n\t");
+		buf.append("},");
+		
+		return buf.toString();
+	}
+	
+	private String fieldAttr() {
+		StringBuilder buf = new StringBuilder();
+		buf.append("\n\t");
+		buf.append("private ");
+		
+		AttrType type = attr.getDefType();
+		if (type.getGenericTypes().isEmpty()) {
+			buf.append(basicType(type.getDefType()));
+		} else if (type.getGenericTypes().size() == 1) {
+			buf.append(basicType(type.getDefType()));
+			buf.append('<').append(wrapType(type.getGenericTypes().get(0))).append('>');
+		} else {
+			buf.append(basicType(type.getDefType()));
+			buf.append('<').append(wrapType(type.getGenericTypes().get(0))).append(',');
+			buf.append(wrapType(type.getGenericTypes().get(1))).append('>');
+		}
+		
+		buf.append(' ');
+		buf.append(attr.getAttrName());
+		buf.append(';');
+		
+		return  buf.toString();
 	}
 	
 	public String getMethod() {
@@ -167,53 +201,4 @@ public class JavaFieldGen extends AbstreactFieldType {
 		return methodBuf.toString();
 	}
 	
-	@Override
-	public String getVectorGenericClassTypeName() {
-		if (msgField.getDefClassType() != FieldType.VECTOR) {
-			return null;
-		}
-		
-		switch (msgField.getDefGenericClassType()) {
-		case MESSAGE:  return msgField.getDefGenericClassTypeName();
-		default:	   return JAVA_TYPE.get(msgField.getDefGenericClassType()).wrappType();
-		}
-	}
-	
-	@Override
-	public String getWholeDefineClassTypeName() {
-		switch (msgField.getDefClassType()) {
-		case VECTOR:  return "List<" + getVectorGenericClassTypeName() + '>';
-		case MESSAGE: return msgField.getDefClassTypeName();
-		default:	  return JAVA_TYPE.get(msgField.getDefClassType()).basicType();
-		}
-	}
-	
-	private static class JavaFiledType implements MsgFiledType {
-
-		/**
-		 * java基础类型
-		 */
-		private String basicType;
-		
-		/**
-		 * java 包装类型
-		 */
-		private String wrappType;
-		
-		
-		public JavaFiledType(String basicType, String wrappType) {
-			this.basicType = basicType;
-			this.wrappType = wrappType;
-		}
-		
-		@Override
-		public String basicType() {
-			return basicType;
-		}
-
-		@Override
-		public String wrappType() {
-			return wrappType;
-		}
-	}
 }

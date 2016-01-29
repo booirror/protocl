@@ -1,0 +1,63 @@
+package org.itas;
+
+import org.itas.Comm;
+
+//家庭
+message Family {
+	Comm.Man wife;
+	Comm.Man husBand;
+	array<Comm.Man> child;
+}
+
+//国家
+message Country{
+	map<string,Comm.Man> persons;
+	ArrayTest arrays;
+	SetTest sets;
+	MapTest maps;
+}
+
+message ArrayTest {
+	array<string> name;				// 名字
+	array<bool> isMerry;				// 是否已婚
+	array<int8> children;				// 孩子数
+	array<int16> age;					// 年龄
+	array<int32> money;				// 拥有金钱
+	array<int64> mobile;				// 手机号
+	array<string> address;				// 地址
+	array<float> value1;			
+	array<double> value2;
+	array<Sex> sex;					// 性别
+	array<Comm.Man> sex;					// 性别
+}
+
+message SetTest {
+	set<string> name;				// 名字
+	set<bool> isMerry;				// 是否已婚
+	set<int8> children;				// 孩子数
+	set<int16> age;					// 年龄
+	set<int32> money;				// 拥有金钱
+	set<int64> mobile;				// 手机号
+	set<string> address;				// 地址
+	set<float> value1;			
+	set<double> value2;
+	set<Sex> sex;					// 性别
+	set<Comm.Man> sex;					// 性别
+}
+
+message MapTest {
+	map<string,Comm.Man> name;				// 名字
+	map<bool,Comm.Man> isMerry;				// 是否已婚
+	map<int8,Comm.Man> children;				// 孩子数
+	map<int16,Comm.Man> age;					// 年龄
+	map<int32,Comm.Man> money;				// 拥有金钱
+	map<int64,Comm.Man> mobile;				// 手机号
+	map<string,Comm.Man> address;				// 地址
+	map<float,Comm.Man> value1;			
+	map<double,Comm.Man> value2;
+	map<Sex,Comm.Man> sex;					// 性别
+	map<Comm.Man,Sex> sex;					// 性别
+}
+
+
+
