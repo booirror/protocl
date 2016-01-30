@@ -1,22 +1,22 @@
 package com.uxuan.protocl;
 
-
-
+import com.uxuan.protocl.generate.JavaFile;
+import com.uxuan.protocl.parse.ProtoclParser;
 
 public class GenMain {
 
 	public static void main(String[] args) throws Exception {
 //
 //		String srcPath = "build/classes";// args[0];
-//		String sdesPath = "./java";// args[1];
+		String sdesPath = "./java";// args[1];
 //		String cdesPath = "./cpp";
 		
-//			String srcPath = "E:\\source\\duobao\\protocl\\webapp\\def";// ARGS[0];
-//			String desPath = "E:\\source\\duobao\\protocl";// args[1];
-		//GenService fileList = new GenService();
-//		fileList.initialize(srcPath);
-//		System.out.println(fileList);
+		ProtoclParser parser = new ProtoclParser();
+		Protocl protocl =  parser.parse("./build");
 		
-		//fileList.generate(sdesPath, cdesPath);
+		for (ProtoclFile pro : protocl.getProtocls()) {
+			JavaFile javaFile = new JavaFile(pro);
+			javaFile.autoGenMsg(sdesPath);
+		}
 	}
 }

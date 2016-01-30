@@ -1,4 +1,4 @@
-package com.uxuan.buffer;
+package com.uxuan.protocl.buffer;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -304,8 +304,8 @@ public final class IoBuf {
 			}else if (clazz == String.class) {
 				datas.add(readString());
 			} else if (Message.class.isAssignableFrom(clazz)) {
-				Message data = Message.getMsg((Class<? extends Message>)clazz);
-				datas.add(data.readMsg(this));
+//				Message data = Message.getMsg((Class<? extends Message>)clazz);
+//				datas.add(data.readMsg(this));
 			} else {
 				throw new RuntimeException("unsupport Type:" + clazz.getName());
 			}
@@ -554,7 +554,7 @@ public final class IoBuf {
 			} else if (data instanceof String) {
 				writeString((String) data);
 			} else if (data instanceof Message) {
-				((Message) data).writeMsg(this);
+//				((Message) data).writeMsg(this);
 			} else {
 				throw new RuntimeException("unsupport Type:" + data.getClass().getName());
 			}

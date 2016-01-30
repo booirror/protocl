@@ -51,9 +51,12 @@ public class ProtoclParser {
 	}
 	
 	private ProtoclFile parseFile(File file) throws IOException {
-		List<Line> lines = readContent(file);
+		String fileName = file.getName();
+		fileName = fileName.substring(0, fileName.indexOf('.'));
 		
-		ProtoclFile protoclFile = new ProtoclFile(file.getName());
+		List<Line> lines = readContent(file, fileName);
+		
+		ProtoclFile protoclFile = new ProtoclFile(fileName);
 		
 		Parser parser = new ParseFile(protoclFile);
 		for (Line line : lines) {
@@ -63,7 +66,7 @@ public class ProtoclParser {
 		return protoclFile;
 	}
 	
-	private List<Line> readContent(File file) throws IOException {
+	private List<Line> readContent(File file, String fileName) throws IOException {
 		FileInputStream input = null;
 		InputStreamReader inputReader = null;
 		BufferedReader reader = null;
@@ -75,7 +78,7 @@ public class ProtoclParser {
 			List<Line> dataList = new ArrayList<Line>(256);
 			String line;
 			for (int lineNum = 1; ((line = reader.readLine()) != null); lineNum ++) {
-				dataList.add(new Line(file.getName(), lineNum, line));
+				dataList.add(new Line(fileName, lineNum, line));
 			}
 			
 			return dataList;
@@ -192,10 +195,10 @@ public class ProtoclParser {
 			
 			if (groups.size() == 3 && ";".equals(groups.get(2))) {
 				if (protoclMsg.isEnum()) {
-					protoclMsg.addAttribute(new ProtoclAttr(groups.get(0), Integer.parseInt(groups.get(1))));
+					protoclMsg.addAttribute(new ProtoclAttr(protoclMsg, groups.get(0), Integer.parseInt(groups.get(1))));
 				} else {
 					AttrType attrType = doAttrDefType(group0, line);
-					protoclMsg.addAttribute(new ProtoclAttr(attrType, groups.get(1)));
+					protoclMsg.addAttribute(new ProtoclAttr(protoclMsg, attrType, groups.get(1)));
 				}
 				
 				return this;

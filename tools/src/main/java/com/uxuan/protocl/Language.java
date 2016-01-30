@@ -70,27 +70,27 @@ public interface Language {
 	 * 
 	 * @return 返回字符串 定义类型
 	 */
-	String STRING();
+	String STRING(boolean wrap);
 	
 	/**
 	 * 有序集合
 	 * 
 	 * @return 返回有序集合 定义类型
 	 */
-	String ARRAY();
+	String ARRAY(boolean wrap);
 	
 	/**
 	 * 无序集合
 	 * 
 	 * @return 返回无序集合 定义类型
 	 */
-	String SET();
+	String SET(boolean wrap);
 	
 	/**
 	 * 字典
 	 * 
 	 * @return 返回关键字查找 字典类型
 	 */
-	String MAP();
+	String MAP(boolean wrap);
 	
 }

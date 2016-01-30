@@ -40,23 +40,23 @@ public class JavaLanguage implements Language {
 	}
 
 	@Override
-	public String STRING() {
+	public String STRING(boolean wrap) {
 		return "String";
 	}
 
 	@Override
-	public String ARRAY() {
-		return "java.util.List";
+	public String ARRAY(boolean wrap) {
+		return wrap ? "java.util.ArrayList" : "java.util.List";
 	}
 
 	@Override
-	public String SET() {
-		return "java.util.Set";
+	public String SET(boolean wrap) {
+		return wrap ? "java.util.HashSet" : "java.util.Set";
 	}
 
 	@Override
-	public String MAP() {
-		return "java.util.Map";
+	public String MAP(boolean wrap) {
+		return  wrap ? "java.util.HashMap" :"java.util.Map";
 	}
 
 }

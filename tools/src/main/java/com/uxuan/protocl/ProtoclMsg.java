@@ -14,6 +14,7 @@ public class ProtoclMsg {
 	/** message name */
 	private final String name;
 	
+	/** 是否枚举类型*/
 	private final boolean isEnum;
 	
 	/** message attributes*/

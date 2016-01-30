@@ -1,4 +1,4 @@
-package com.uxuan.buffer;
+package com.uxuan.protocl.buffer;
 
 import java.nio.ByteBuffer;
 
@@ -97,20 +97,20 @@ public class Student extends Message {
         return builder.toString();
     }
 
-	@Override
-	public Student readMsg(IoBuf buf) {
-		this.userId = buf.readInt();
-		this.name = buf.readString();
-		this.address = buf.readString();
-		return this;
-	}
-
-	@Override
-	public void writeMsg(IoBuf buf) {
-		buf.writeInt(userId);
-		buf.writeString(name);
-		buf.writeString(address);
-	}
+//	@Override
+//	public Student readMsg(IoBuf buf) {
+//		this.userId = buf.readInt();
+//		this.name = buf.readString();
+//		this.address = buf.readString();
+//		return this;
+//	}
+//
+//	@Override
+//	public void writeMsg(IoBuf buf) {
+//		buf.writeInt(userId);
+//		buf.writeString(name);
+//		buf.writeString(address);
+//	}
 
 	@Override
 	public Message clone() {

@@ -21,15 +21,18 @@ public class ProtoclAttr {
 	/** 序号*/
 	private final int attrIndex;
 	
-	public ProtoclAttr(String attrName, int attrIndex) {
-		this(null, attrName, attrIndex);
+	private final ProtoclMsg protoclMsg;
+	
+	public ProtoclAttr(ProtoclMsg protoclMsg, String attrName, int attrIndex) {
+		this(protoclMsg, null, attrName, attrIndex);
 	}
 	
-	public ProtoclAttr(AttrType defType, String attrName) {
-		this(defType, attrName, -1);
+	public ProtoclAttr(ProtoclMsg protoclMsg, AttrType defType, String attrName) {
+		this(protoclMsg, defType, attrName, -1);
 	}
 	
-	public ProtoclAttr(AttrType defType, String attrName, int attrIndex) {
+	public ProtoclAttr(ProtoclMsg protoclMsg, AttrType defType, String attrName, int attrIndex) {
+		this.protoclMsg = protoclMsg;
 		this.defType = defType;
 		this.attrName = attrName;
 		this.attrIndex = attrIndex;
@@ -45,6 +48,10 @@ public class ProtoclAttr {
 
 	public int getAttrIndex() {
 		return attrIndex;
+	}
+	
+	public String getMsgName() {
+		return protoclMsg.getName();
 	}
 	
 	public boolean isEnum() {

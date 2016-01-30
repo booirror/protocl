@@ -1,173 +1,87 @@
-//package com.uxuan.protocl.generate;
-//
-//import static com.uxuan.protocl.util.StringUtils.firstCharUpCase;
-//import static com.uxuan.protocl.util.StringUtils.nextLine;
-//
-//import com.uxuan.protocl.MsgBody;
-//import com.uxuan.protocl.MsgField;
-//import com.uxuan.protocl.MsgFiledType.FieldType;
-//import com.uxuan.protocl.util.MsgStatus;
-//
-//public class JavaStruct {
-//	
-//	private MsgBody classInfo;
-//	
-//	public JavaStruct(MsgBody clazz) {
-//		this.classInfo = clazz;
-//	}
-//	
-//	public String autoGenStruct() {
-//		StringBuffer classdBuf = new StringBuffer();
-//		
-//		classdBuf.append(defineClassBegin());
-//		
-//		classdBuf.append(messageHexOrder());
-//
-//		classdBuf.append(defineField());
-//
-//		classdBuf.append(defConstructor());
-//
-//		classdBuf.append(defSUFFIXMethod());
-//
-//		classdBuf.append(defGetSetAddMethod());
-//	        
+package com.uxuan.protocl.generate;
+
+import com.uxuan.protocl.ProtoclAttr;
+import com.uxuan.protocl.ProtoclMsg;
+
+public class JavaMsg {
+	
+	private ProtoclMsg protoclMsg;
+	
+	public JavaMsg(ProtoclMsg protoclMsg) {
+		this.protoclMsg = protoclMsg;
+	}
+	
+	public String autuGen() {
+		return protoclMsg.isEnum() ? genEnum() : genMsg();
+	}
+	
+	private String genEnum() {
+		StringBuffer buffer = new StringBuffer();
+		
+		buffer.append("\n\n");
+		buffer.append(String.format("public static enum %s {", protoclMsg.getName()));
+		
+		for (ProtoclAttr attr : protoclMsg.getAttributes()) {
+			JavaAttr javaAttr = new JavaAttr(attr);
+			buffer.append(javaAttr.genAttribute());
+		}
+		
+		buffer.append("\n");
+		buffer.append(";");
+		buffer.append("\n\n\t");
+		buffer.append(String.format("private %s() {\n\t}", protoclMsg.getName()));
+		
+		buffer.append("\n\n\t");
+		buffer.append("public abstract int value();");
+		
+		buffer.append("\n\n");
+		buffer.append("}");
+		
+        return buffer.toString();
+	}
+	
+	private String genMsg() {
+		StringBuffer buffer = new StringBuffer();
+		
+		buffer.append("\n\n");
+		buffer.append(String.format("public static class %s extends com.uxuan.protocl.buffer.Message {", 
+			protoclMsg.getName()));
+		
+
+		StringBuffer fieldBuf = new StringBuffer();
+		StringBuffer methdBuf = new StringBuffer();
+		
+		for (ProtoclAttr attr : protoclMsg.getAttributes()) {
+			JavaAttr javaAttr = new JavaAttr(attr);
+			fieldBuf.append(javaAttr.genAttribute());
+			methdBuf.append(javaAttr.genMethod());
+		}
+		
+		buffer.append("\n");
+		buffer.append(fieldBuf.toString());
+		
+		buffer.append("\n\n\t");
+		buffer.append(String.format("private %s() {\n\t}", protoclMsg.getName()));
+	        
+		buffer.append(methdBuf.toString());
 //		classdBuf.append(readMessageMethod());
-//
+
 //		classdBuf.append(writeMessageMethod());
-//	        
+	        
 //		classdBuf.append(newInstanceMethod());
-//
+
 //		classdBuf.append(recivedAbleMethod());
-//
+
 //		classdBuf.append(sendAbleMethod());
-//
+
 //		classdBuf.append(toStringMethod());
-//
-//		classdBuf.append(defineClassEnd());
-//	        
-//        return classdBuf.toString();
-//	}
-//	
-//	public String autoGenEventMethod() {
-//		StringBuffer buffer = new StringBuffer();
-//
-//		if (classInfo.isTypeExist(MsgStatus.CLIENT_TO_SERVER)) {
-//
-//			buffer.append(nextLine(2, 1));
-//			buffer.append(String.format("public abstract void %s(T value, %s request);", classInfo.getMsgName(false), classInfo.getMsgName(true)));
-//		}
-//
-//		return buffer.toString();
-//	}
-//	
-//	private String messageHexOrder() {
-//		if (classInfo.isTypeExist(MsgStatus.CLIENT_TO_SERVER) || classInfo.isTypeExist(MsgStatus.SERVER_TO_CLIENT)) {
-//			StringBuffer buffer = new StringBuffer();
-//
-//			buffer.append(nextLine(2, 1));
-//			buffer.append(String.format("static final byte SUFFIX = %s;", classInfo.getHexOrder()));
-//			return buffer.toString();
-//		}
-//
-//		return "";
-//	}
-//	
-//	private String defineClassBegin() {
-//		StringBuffer buffer = new StringBuffer();
-//		
-//		buffer.append(String.format("public static class %s extends AbstractMessage", classInfo.getMsgName(true)));
-//
-//		if (classInfo.isTypeExist(MsgStatus.SERVER_TO_CLIENT) || classInfo.isTypeExist(MsgStatus.CLIENT_TO_SERVER)) {
-//			buffer.append(" implements");
-//			if (classInfo.isTypeExist(MsgStatus.CLIENT_TO_SERVER)) {
-//				buffer.append(" RecivedAble,");
-//			}
-//			if (classInfo.isTypeExist(MsgStatus.SERVER_TO_CLIENT)) {
-//				buffer.append(" SendAble,");
-//			}
-//			
-//			buffer.deleteCharAt(buffer.length() - 1);
-//		}
-//		
-//		buffer.append("{");
-//		return buffer.toString();
-//	}
-//	
-//	private String defineClassEnd() {
-//		return "\n}";
-//	}
-//	
-//	private String defineField() {
-//		StringBuffer fieldBuf = new StringBuffer();
-//		fieldBuf.append(nextLine(1, 0));
-//		
-//		JavaFieldGen javaField;
-//		for (MsgField field : classInfo.getMsgFields()) {
-//			javaField = new JavaFieldGen(classInfo, field);
-//			
-//			fieldBuf.append(nextLine(1, 1));
-//			fieldBuf.append(javaField.defendField());
-//		}
-//		
-//		return fieldBuf.toString();
-//	}
-//	
-//	private String defConstructor() {
-//		StringBuffer consBuf = new StringBuffer();
-//		
-//		consBuf.append(nextLine(2, 1));
-//		consBuf.append(String.format("private %s() {", classInfo.getMsgName(true)));
-//
-//		consBuf.append(nextLine(1, 1));
-//		consBuf.append("}");
-//
-//		return consBuf.toString();
-//	}
-//	
-//	private String defGetSetAddMethod() {
-//		StringBuffer methodBuf = new StringBuffer();
-//
-//		JavaFieldGen javaField;
-//		for (MsgField field : classInfo.getMsgFields()) {
-//			javaField = new JavaFieldGen(classInfo, field);
-//			
-//			methodBuf.append(nextLine(2, 0));
-//			methodBuf.append(javaField.getMethod());
-//
-//			methodBuf.append(nextLine(2, 0));
-//			methodBuf.append(javaField.setMethod());
-//			
-//			if (field.getDefClassType() == FieldType.VECTOR) {
-//				methodBuf.append(nextLine(2, 0));
-//				methodBuf.append(javaField.addVectorMethod());
-//
-//				methodBuf.append(nextLine(2, 0));
-//				methodBuf.append(javaField.addAllVectorMethod());
-//				
-//				methodBuf.append(nextLine(2, 0));
-//				methodBuf.append(javaField.setVectorMethod());
-//			}
-//		}
-//		
-//		return methodBuf.toString();
-//	}
-//	
-//	String defSUFFIXMethod() {
-//		StringBuilder builder = new StringBuilder();
-//
-//		if (classInfo.isTypeExist(MsgStatus.CLIENT_TO_SERVER) || classInfo.isTypeExist(MsgStatus.SERVER_TO_CLIENT)) {
-//			builder.append(nextLine(2, 1));
-//			builder.append("@Override");
-//			builder.append(nextLine(1, 1));
-//			builder.append("public final byte SUFFIX() {");
-//			builder.append(nextLine(1, 2));
-//			builder.append("return SUFFIX;");
-//			builder.append(nextLine(1, 1));
-//			builder.append("}");
-//		}
-//		
-//		return builder.toString();
-//	}
+	        
+		buffer.append("\n");
+		buffer.append("}");
+		
+        return buffer.toString();
+	}
+	
 //	
 //	String readMessageMethod() {
 //		StringBuffer buffer = new StringBuffer();
@@ -361,10 +275,10 @@
 //		strBuf.append("}");
 //		return strBuf.toString();
 //	}
-//	
+	
 //	@Override
 //	public String toString() {
 //		return classInfo.getMsgName(true);
 //	}
-//
-//}
+
+}

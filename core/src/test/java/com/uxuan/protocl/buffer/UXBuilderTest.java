@@ -1,7 +1,9 @@
-package com.uxuan.buffer;
+package com.uxuan.protocl.buffer;
 
 import org.junit.Before;
 import org.junit.Test;
+
+import com.uxuan.protocl.buffer.IoBuf;
 
 import java.nio.ByteBuffer;
 import java.util.UUID;

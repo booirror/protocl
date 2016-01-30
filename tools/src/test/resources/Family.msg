@@ -3,7 +3,7 @@ package org.itas;
 import org.itas.Comm;
 
 //家庭
-message Family {
+message Famils {
 	Comm.Man wife;
 	Comm.Man husBand;
 	array<Comm.Man> child;
@@ -27,8 +27,8 @@ message ArrayTest {
 	array<string> address;				// 地址
 	array<float> value1;			
 	array<double> value2;
-	array<Sex> sex;					// 性别
-	array<Comm.Man> sex;					// 性别
+	array<Comm.Sex> sex;					// 性别
+	array<Comm.Man> sex1;					// 性别
 }
 
 message SetTest {
@@ -41,8 +41,8 @@ message SetTest {
 	set<string> address;				// 地址
 	set<float> value1;			
 	set<double> value2;
-	set<Sex> sex;					// 性别
-	set<Comm.Man> sex;					// 性别
+	set<Comm.Sex> sex;					// 性别
+	set<Comm.Man> sex1;					// 性别
 }
 
 message MapTest {
@@ -55,8 +55,8 @@ message MapTest {
 	map<string,Comm.Man> address;				// 地址
 	map<float,Comm.Man> value1;			
 	map<double,Comm.Man> value2;
-	map<Sex,Comm.Man> sex;					// 性别
-	map<Comm.Man,Sex> sex;					// 性别
+	map<Comm.Sex,Comm.Man> sex;					// 性别
+	map<Comm.Man,Comm.Sex> sex1;					// 性别
 }
 
 

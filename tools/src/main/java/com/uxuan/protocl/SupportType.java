@@ -46,19 +46,19 @@ public abstract class SupportType {
 		}
 		
 		if ("string".equals(defType)) {
-			return language.STRING();
+			return language.STRING(true);
 		}
 		
 		if ("array".equals(defType)) {
-			return language.ARRAY();
+			return language.ARRAY(true);
 		}
 		
 		if ("set".equals(defType)) {
-			return language.SET();
+			return language.SET(true);
 		}
 		
 		if ("map".equals(defType)) {
-			return language.MAP();
+			return language.MAP(true);
 		}
 		
 		return defType;
@@ -98,19 +98,19 @@ public abstract class SupportType {
 		}
 		
 		if ("string".equals(defType)) {
-			return language.STRING();
+			return language.STRING(false);
 		}
 		
 		if ("array".equals(defType)) {
-			return language.ARRAY();
+			return language.ARRAY(false);
 		}
 		
 		if ("set".equals(defType)) {
-			return language.SET();
+			return language.SET(false);
 		}
 		
 		if ("map".equals(defType)) {
-			return language.MAP();
+			return language.MAP(false);
 		}
 		
 		return defType;
