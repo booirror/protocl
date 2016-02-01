@@ -5,7 +5,12 @@ import java.nio.ByteOrder;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 /**
  * 自动增长buffer
@@ -166,7 +171,7 @@ public final class IoBuf {
 	 *
 	 * @return this buffer
 	 */
-	public int readInt() {
+	public int readInt32() {
 		return buffer.getInt();
 	}
 
@@ -176,7 +181,7 @@ public final class IoBuf {
 	 * @param index 读取位置
 	 * @return this buffer
 	 */
-	public int readInt(int index) {
+	public int readInt32(int index) {
 		return buffer.getInt(index);
 	}
 
@@ -278,40 +283,89 @@ public final class IoBuf {
 		buffer.get(bs);
 		return bs;
 	}
+	
+	public <T extends Enum<T>> T readEnum(Class<?> clazz, Integer key) {
+		return Eum.getEnum(clazz, readInt32());
+	}
+	
+	private Object readWrap(Class<?> clazz) {
+		if (clazz == Boolean.class) {
+			return readBool();
+		} 
+
+		if (clazz == Byte.class) {
+			return readInt8();
+		} 
+
+		if (clazz == Short.class) {
+			return readInt16();
+		} 
+		
+		if (clazz == Integer.class) {
+			return readInt32();
+		} 
+
+		if (clazz == Long.class) {
+			return readInt64();
+		} 
+
+		if (clazz == Float.class) {
+			return readFloat();
+		} 
+
+		if (clazz == Double.class) {
+			return readDouble();
+		}
+
+		if (clazz == String.class) {
+			return readString();
+		} 
+
+		if (Eum.class.isAssignableFrom(clazz)) {
+			return readEnum(clazz, readInt32());
+		}
+		
+		if (Message.class.isAssignableFrom(clazz)) {
+			return Message.getMessage(clazz).parse(this);
+		}
+
+		throw new RuntimeException("unsupport Type:" + clazz.getName());
+	}
 
 	@SuppressWarnings("unchecked")
-	protected <T> List<T> readArray(Class<?> clazz) {
+	public <T> List<T> readArray(Class<?> clazz) {
 		int len = readInt16();
 
 		List<Object> datas = new ArrayList<Object>(len);
 		for (int i = 0; i < len; i++) {
-			if (clazz == Boolean.class) {
-				datas.add(readBool());
-			} else if (clazz == Character.class) {
-				datas.add(readChar());
-			} else if (clazz == Byte.class) {
-				datas.add(readInt8());
-			} else if (clazz == Short.class) {
-				datas.add(readInt16());
-			} else if (clazz == Integer.class) {
-				datas.add(readInt());
-			} else if (clazz == Long.class) {
-				datas.add(readInt64());
-			} else if (clazz == Float.class) {
-				datas.add(readFloat());
-			} else if (clazz == Double.class) {
-				datas.add(readDouble());
-			}else if (clazz == String.class) {
-				datas.add(readString());
-			} else if (Message.class.isAssignableFrom(clazz)) {
-//				Message data = Message.getMsg((Class<? extends Message>)clazz);
-//				datas.add(data.readMsg(this));
-			} else {
-				throw new RuntimeException("unsupport Type:" + clazz.getName());
-			}
+			datas.add(readWrap(clazz));
 		}
 
 		return (List<T>) datas;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public <T> List<T> readSet(Class<?> clazz) {
+		int len = readInt16();
+
+		Set<Object> datas = new HashSet<Object>(len);
+		for (int i = 0; i < len; i++) {
+			datas.add(readWrap(clazz));
+		}
+
+		return (List<T>) datas;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public <K, V> Map<K, V> readMap(Class<?> k, Class<?> v) {
+		int len = readInt16();
+
+		Map<Object, Object> datas = new HashMap<Object, Object>(len);
+		for (int i = 0; i < len; i++) {
+			datas.put(readWrap(k), readWrap(v));
+		}
+
+		return (Map<K, V>) datas;
 	}
 	
 	/**
@@ -415,7 +469,7 @@ public final class IoBuf {
 	 * @param data 要写入int值
 	 * @return this buffer
      */
-	public IoBuf writeInt(int data) {
+	public IoBuf writeInt32(int data) {
 		prep(4);
 		buffer.putInt(data);
 		return this;
@@ -428,7 +482,7 @@ public final class IoBuf {
 	 * @param data 要写入的int值
      * @return this buffer
      */
-	public IoBuf writeInt(int index, int data) {
+	public IoBuf writeInt32(int index, int data) {
 		buffer.putInt(index, data);
 		return this;
 	}
@@ -528,36 +582,88 @@ public final class IoBuf {
 		return this;
 	}
 	
-	public IoBuf writeArray(List<?> datas) {
-		if (datas == null) {
-			datas = Collections.emptyList();
+	public IoBuf writeEnum(Eum enm) {
+		writeInt32(enm.value());
+		return this;
+	}
+	
+	private IoBuf writeWrap(Object data) {
+		if (data instanceof Boolean) {
+			return writeBool((Boolean)data);
+		} 
+
+		if (data instanceof Byte) {
+			return writeInt8((Byte)data);
+		} 
+		
+		if (data instanceof Short) {
+			return writeInt16((Short) data);
+		} 
+
+		if (data instanceof Integer) {
+			return writeInt32((Integer) data);
+		} 
+
+		if (data instanceof Long) {
+			return writeInt64((Long) data);
+		} 
+
+		if (data instanceof Float) {
+			return writeFloat((Float) data);
+		} 
+
+		if (data instanceof Double) {
+			return writeDouble((Double) data);
+		} 
+
+		if (data instanceof String) {
+			return writeString((String) data);
+		} 
+		
+		if (data instanceof Eum) {
+			return writeEnum((Eum)data);
 		}
+
+		if (data instanceof Message) {
+			final byte[] bs = ((Message) data).toArray();
+			return writeByte(bs);
+		}
+			
+		throw new RuntimeException("unsupport Type:" + data.getClass().getName());
+	}
+	
+	public IoBuf writeArray(List<?> datas) {
+		if (datas == null) 
+			datas = Collections.emptyList();
 
 		writeInt16(datas.size());
 		for (Object data : datas) {
-			if (data instanceof Boolean) {
-				writeBool((Boolean)data);
-			} else if (data instanceof Character) {
-				writeChar((Character)data);
-			} else if (data instanceof Byte) {
-				writeInt8((Byte)data);
-			} else if (data instanceof Short) {
-				writeInt16((Short) data);
-			} else if (data instanceof Integer) {
-				writeInt((Integer) data);
-			} else if (data instanceof Long) {
-				writeInt64((Long) data);
-			} else if (data instanceof Float) {
-				writeFloat((Float) data);
-			} else if (data instanceof Double) {
-				writeDouble((Double) data);
-			} else if (data instanceof String) {
-				writeString((String) data);
-			} else if (data instanceof Message) {
-//				((Message) data).writeMsg(this);
-			} else {
-				throw new RuntimeException("unsupport Type:" + data.getClass().getName());
-			}
+			writeWrap(data);
+		}
+		
+		return this;
+	}
+	
+	public IoBuf writeSet(Set<?> datas) {
+		if (datas == null) 
+			datas = Collections.emptySet();
+
+		writeInt16(datas.size());
+		for (Object data : datas) {
+			writeWrap(data);
+		}
+		
+		return this;
+	}
+	
+	public IoBuf writeMap(Map<?, ?> datas) {
+		if (datas == null) 
+			datas = Collections.emptyMap();
+
+		writeInt16(datas.size());
+		for (Entry<?, ?> entry : datas.entrySet()) {
+			writeWrap(entry.getKey());
+			writeWrap(entry.getValue());
 		}
 		
 		return this;

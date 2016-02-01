@@ -1,4 +1,4 @@
-package com.uxuan.protocl;
+package com.uxuan.protocl.module;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -15,46 +15,46 @@ import java.util.Set;
 public final class ProtoclFile {
 
 	/** 包名*/
-	private String packageName;
+	private String pkg;
 	
 	/** 导入的包 */
-	private final Set<String> imports;
+	private final Set<String> imps;
 	
 	/** 消息文件名称*/
-	private final String fileName;
+	private final String name;
 
 	/** 消息文件包含的消息 */
 	private final List<ProtoclMsg> messages;
 	
-	public ProtoclFile(String fileName) {
-		this.fileName = fileName;
-		this.imports = new HashSet<String>();
+	public ProtoclFile(String name) {
+		this.name = name;
+		this.imps = new HashSet<String>();
 		this.messages = new ArrayList<ProtoclMsg>();
 	}
 
 	/**
 	 * @return the packageName
 	 */
-	public String getPackageName() {
-		return packageName;
+	public String getPkg() {
+		return pkg;
 	}
 
 	/**
-	 * @param packageName the packageName to set
+	 * @param pkg the packageName to set
 	 */
-	public void setPackageName(String packageName) {
-		if (this.packageName != null) {
-			throw new RuntimeException("file only one package, old:" + this.packageName + ", given:" + packageName);
+	public void setPkg(String pkg) {
+		if (this.pkg != null) {
+			throw new RuntimeException("file only one package, old:" + this.pkg + ", given:" + pkg);
 		}
 		
-		this.packageName = packageName;
+		this.pkg = pkg;
 	}
 
 	/**
 	 * @return the imports
 	 */
-	public Set<String> getImports() {
-		return imports;
+	public Set<String> getImps() {
+		return imps;
 	}
 	
 	/**
@@ -63,14 +63,14 @@ public final class ProtoclFile {
 	 * @param importStr
 	 */
 	public void addImport(String importStr) {
-		this.imports.add(importStr);
+		this.imps.add(importStr);
 	}
 
 	/**
 	 * @return the fileName
 	 */
-	public String getFileName() {
-		return fileName;
+	public String getName() {
+		return name;
 	}
 
 	/**
@@ -93,12 +93,12 @@ public final class ProtoclFile {
 	public String toString() {
 		StringBuilder buf = new StringBuilder();
 		
-		if (packageName != null) {
-			buf.append("package ").append(packageName).append(";");
+		if (pkg != null) {
+			buf.append("package ").append(pkg).append(";");
 		}
 		
 		buf.append("\n\n");
-		for (String imp : imports) {
+		for (String imp : imps) {
 			buf.append("import ").append(imp).append(";");
 		}
 		

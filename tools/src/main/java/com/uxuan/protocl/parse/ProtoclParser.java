@@ -8,11 +8,13 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.uxuan.protocl.Protocl;
-import com.uxuan.protocl.ProtoclAttr;
-import com.uxuan.protocl.ProtoclAttr.AttrType;
-import com.uxuan.protocl.ProtoclFile;
-import com.uxuan.protocl.ProtoclMsg;
+import com.uxuan.protocl.AttrType;
+import com.uxuan.protocl.LanguageManager;
+import com.uxuan.protocl.MessageType;
+import com.uxuan.protocl.module.Protocl;
+import com.uxuan.protocl.module.ProtoclAttr;
+import com.uxuan.protocl.module.ProtoclFile;
+import com.uxuan.protocl.module.ProtoclMsg;
 import com.uxuan.protocl.util.CloseUtil;
 import com.uxuan.protocl.util.DefineException;
 import com.uxuan.protocl.util.Files;
@@ -43,14 +45,14 @@ public class ProtoclParser {
 		Protocl protocl = new Protocl();
 		
 		for (File file : files) {
-			ProtoclFile protoclFile = parseFile(file);
+			ProtoclFile protoclFile = parse(file);
 			protocl.addProtocl(protoclFile);
 		}
 		
 		return protocl;
 	}
 	
-	private ProtoclFile parseFile(File file) throws IOException {
+	private ProtoclFile parse(File file) throws IOException {
 		String fileName = file.getName();
 		fileName = fileName.substring(0, fileName.indexOf('.'));
 		
@@ -116,11 +118,11 @@ public class ProtoclParser {
 			} 
 
 			if ("enum".equals(group0)) {
-				return doMsg(line, groups, true);
+				return doMsg(line, groups, MessageType.ENUM);
 			} 
 
 			if ("message".equals(group0)) {
-				return doMsg(line, groups, false);
+				return doMsg(line, groups, MessageType.MESSAGE);
 			} 
 				
 			throw new DefineException("protocl:%s [line=%s], ", line.getFileName(), line.getLineNum());
@@ -135,7 +137,7 @@ public class ProtoclParser {
 				throwDefindException(line);
 			}
 			
-			protoclFile.setPackageName(groups.get(1));
+			protoclFile.setPkg(groups.get(1));
 			
 			return this;
 		}
@@ -154,7 +156,7 @@ public class ProtoclParser {
 			return this;
 		}
 		
-		private Parser doMsg(Line line, List<String> groups, boolean isEnum) {
+		private Parser doMsg(Line line, List<String> groups, MessageType type) {
 			if (groups.size() != 3) {
 				throwDefindException(line);
 			}
@@ -163,7 +165,7 @@ public class ProtoclParser {
 				throwDefindException(line);
 			}
 			
-			ProtoclMsg protoclMsg = new ProtoclMsg(groups.get(1), isEnum);
+			ProtoclMsg protoclMsg = new ProtoclMsg(type, groups.get(1));
 			protoclFile.addMessage(protoclMsg);
 			
 			return new ParseMsg(this, protoclMsg);
@@ -175,11 +177,11 @@ public class ProtoclParser {
 		
 		private final Parser parent;
 		
-		private final ProtoclMsg protoclMsg;
+		private final ProtoclMsg msg;
 		
 		public ParseMsg(Parser parent, ProtoclMsg msg) {
 			this.parent = parent;
-			this.protoclMsg = msg;
+			this.msg = msg;
 		}
 		
 		@Override
@@ -194,11 +196,18 @@ public class ProtoclParser {
 			doCheck(group0, line);
 			
 			if (groups.size() == 3 && ";".equals(groups.get(2))) {
-				if (protoclMsg.isEnum()) {
-					protoclMsg.addAttribute(new ProtoclAttr(protoclMsg, groups.get(0), Integer.parseInt(groups.get(1))));
-				} else {
+				LanguageManager instance = LanguageManager.getInstance();
+				ProtoclAttr.Builder builder = ProtoclAttr.newBuilder().setName(groups.get(0));
+				if (msg.isType(MessageType.ENUM)) {
+					msg.addAttribute(ProtoclAttr.newBuilder()
+							 .setName(groups.get(0))
+							 .setMessage(msg)
+							 .setIndex(Integer.parseInt(groups.get(1)))
+							 .setType(instance.getAttribute(AttrType.ENUM))
+							 .build());
+				}  else if (msg.isType(MessageType.MESSAGE)) {
 					AttrType attrType = doAttrDefType(group0, line);
-					protoclMsg.addAttribute(new ProtoclAttr(protoclMsg, attrType, groups.get(1)));
+					msg.addAttribute(new ProtoclAttr(msg, attrType, groups.get(1)));
 				}
 				
 				return this;

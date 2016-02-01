@@ -12,85 +12,94 @@ public interface Language {
 	/**
 	 * boolean
 	 * 
-	 * @param wrap 是否获取包装类型
 	 * @return 返回boolean 定义类型
 	 */
-	String BOOL(boolean wrap);
+	Attribute BOOL();
 	
 	/**
 	 * 字节
 	 * 
-	 * @param wrap 是否获取包装类型
 	 * @return 返回字节 定义类型
 	 */
-	String INT8(boolean wrap);
+	Attribute INT8();
 
 	/**
 	 * 短整型
 	 * 
-	 * @param wrap 是否获取包装类型
 	 * @return 返回短整型 定义类型
 	 */
-	String INT16(boolean wrap);
+	Attribute INT16();
 
 	/**
 	 * 整型
 	 * 
-	 * @param wrap 是否获取包装类型
 	 * @return 返回整型 定义类型
 	 */
-	String INT32(boolean wrap);
+	Attribute INT32();
 
 	/**
 	 * 长整型
 	 * 
-	 * @param wrap 是否获取包装类型
 	 * @return 返回长整型 定义类型
 	 */
-	String INT64(boolean wrap);
+	Attribute INT64();
 
 	/**
 	 * 单精度
 	 * 
-	 * @param wrap 是否获取包装类型
 	 * @return 返回单精度 定义类型
 	 */
-	String FLOAT(boolean wrap);
+	Attribute FLOAT32();
 	
 	/**
 	 * 双精度
 	 * 
-	 * @param wrap 是否获取包装类型
 	 * @return 返回双精度 定义类型
 	 */
-	String DOUBLE(boolean wrap);
+	Attribute FLOAT64();
 	
 	/**
 	 * 字符串
 	 * 
 	 * @return 返回字符串 定义类型
 	 */
-	String STRING(boolean wrap);
+	Attribute STRING();
+	
+	/**
+	 * 枚举类型
+	 * 
+	 * @param wrap
+	 * @return
+	 */
+	Attribute ENUM();
+	
+	/**
+	 * 消息类型
+	 * 
+	 * @param wrap
+	 * @return
+	 */
+	Attribute MESSAGE();
 	
 	/**
 	 * 有序集合
 	 * 
 	 * @return 返回有序集合 定义类型
 	 */
-	String ARRAY(boolean wrap);
+	Attribute ARRAY();
 	
 	/**
 	 * 无序集合
 	 * 
 	 * @return 返回无序集合 定义类型
 	 */
-	String SET(boolean wrap);
+	Attribute SET();
 	
 	/**
 	 * 字典
 	 * 
 	 * @return 返回关键字查找 字典类型
 	 */
-	String MAP(boolean wrap);
+	Attribute MAP();
 	
 }

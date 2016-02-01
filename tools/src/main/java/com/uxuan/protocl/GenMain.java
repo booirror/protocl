@@ -1,6 +1,8 @@
 package com.uxuan.protocl;
 
 import com.uxuan.protocl.generate.JavaFile;
+import com.uxuan.protocl.module.Protocl;
+import com.uxuan.protocl.module.ProtoclFile;
 import com.uxuan.protocl.parse.ProtoclParser;
 
 public class GenMain {

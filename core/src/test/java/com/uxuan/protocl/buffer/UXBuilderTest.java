@@ -136,19 +136,19 @@ public class UXBuilderTest {
     public void testInt32() throws Exception {
         int dv = random.nextInt(Integer.MAX_VALUE);
         IoBuf buffer = IoBuf.allocate(4);
-        buffer.writeInt(dv).finishWirte();
+        buffer.writeInt32(dv).finishWirte();
 
-        assertEquals(dv, buffer.readInt());
+        assertEquals(dv, buffer.readInt32());
     }
 
     @Test
     public void testInt32Index() throws Exception {
         int dv = random.nextInt(Integer.MAX_VALUE);
         IoBuf buffer = IoBuf.allocate(4);
-        buffer.writeInt(1).writeInt64(4);
-        buffer.writeInt(3, dv).finishWirte();
+        buffer.writeInt32(1).writeInt64(4);
+        buffer.writeInt32(3, dv).finishWirte();
 
-        assertEquals(dv, buffer.readInt(3));
+        assertEquals(dv, buffer.readInt32(3));
     }
 
     @Test

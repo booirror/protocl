@@ -5,8 +5,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 
-import com.uxuan.protocl.ProtoclFile;
-import com.uxuan.protocl.ProtoclMsg;
+import com.uxuan.protocl.module.ProtoclFile;
+import com.uxuan.protocl.module.ProtoclMsg;
 
 public class JavaFile {
 
@@ -15,22 +15,24 @@ public class JavaFile {
 
 	public JavaFile(ProtoclFile protoclFile) {
 		this.file = protoclFile;
+		file.addImport("com.uxuan.protocl.buffer.IoBuf");
+		file.addImport("java.nio.ByteBuffer");
 	}
 	
 	public void autoGenMsg(String desPath) throws IOException {
 		System.out.println("java begin.");
 		StringBuffer msgBuffer = new StringBuffer();
 		
-		msgBuffer.append("package ").append(file.getPackageName()).append(";");
+		msgBuffer.append("package ").append(file.getPkg()).append(";");
 		msgBuffer.append("\n");
 		
-		for (String imp : file.getImports()) {
+		for (String imp : file.getImps()) {
 			msgBuffer.append("\n");
 			msgBuffer.append("import ").append(imp).append(";");
 		}
 		
 		msgBuffer.append("\n\n");
-		msgBuffer.append("public class ").append(file.getFileName()).append(" {");
+		msgBuffer.append("public class ").append(file.getName()).append(" {");
 		
 	
 		
@@ -41,19 +43,19 @@ public class JavaFile {
 			msgBuffer.append(javaMsg.autuGen());
 		}
 		msgBuffer.append("\n\n");
-		msgBuffer.append(String.format("private %s() {\n}", file.getFileName()));
+		msgBuffer.append(String.format("private %s() {\n}", file.getName()));
 		
 		msgBuffer.append("\n\n");
 		msgBuffer.append("}");
 		
-		String dir = desPath + "/" + file.getPackageName().replace('.', '/');
+		String dir = desPath + "/" + file.getPkg().replace('.', '/');
 		
 		File wfile = new File(dir);
 		if (!wfile.exists()) {
 			wfile.mkdirs();
 		}
 		
-		wfile = new File(dir + '/' + file.getFileName() + ".java");
+		wfile = new File(dir + '/' + file.getName() + ".java");
 		System.out.println(wfile.getAbsolutePath());
 		if (wfile.exists()) {
 			wfile.delete();

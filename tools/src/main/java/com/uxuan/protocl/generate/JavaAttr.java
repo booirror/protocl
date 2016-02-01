@@ -4,11 +4,11 @@ import static com.uxuan.protocl.util.StringUtils.firstCharUpCase;
 
 import java.util.List;
 
-import com.uxuan.protocl.ProtoclAttr;
-import com.uxuan.protocl.ProtoclAttr.AttrType;
 import com.uxuan.protocl.SupportType;
+import com.uxuan.protocl.module.ProtoclAttr;
+import com.uxuan.protocl.module.ProtoclAttr.AttrType;
 
-public class JavaAttr extends SupportType {
+public class JavaAttr {
 
 	/** 消息body*/
 	private final ProtoclAttr attr;

@@ -17,7 +17,7 @@ message Country{
 	MapTest maps;
 }
 
-message ArrayTest {
+message ArrayTest { 
 	array<string> name;				// 名字
 	array<bool> isMerry;				// 是否已婚
 	array<int8> children;				// 孩子数
@@ -28,7 +28,7 @@ message ArrayTest {
 	array<float> value1;			
 	array<double> value2;
 	array<Comm.Sex> sex;					// 性别
-	array<Comm.Man> sex1;					// 性别
+	array<Comm.Man> sex1;			// 性别
 }
 
 message SetTest {

@@ -1,7 +1,9 @@
-package com.uxuan.protocl;
+package com.uxuan.protocl.module;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.uxuan.protocl.MessageType;
 
 /**
  *
@@ -15,19 +17,19 @@ public class ProtoclMsg {
 	private final String name;
 	
 	/** 是否枚举类型*/
-	private final boolean isEnum;
+	private final MessageType type;
 	
 	/** message attributes*/
 	private final List<ProtoclAttr> attributes;
 	
-	public ProtoclMsg(String name, boolean isEnum) {
+	public ProtoclMsg(MessageType type, String name) {
+		this.type = type;
 		this.name = name;
-		this.isEnum = isEnum;
 		this.attributes = new ArrayList<ProtoclAttr>();;
 	}
 
-	public boolean isEnum() {
-		return isEnum;
+	public boolean isType(MessageType type) {
+		return type == this.type;
 	}
 	
 	/**
@@ -56,7 +58,7 @@ public class ProtoclMsg {
 	@Override
 	public String toString() {
 		StringBuilder buf = new StringBuilder();
-		if (isEnum) {
+		if (isType(MessageType.ENUM)) {
 			buf.append("enum ").append(name);
 		} else {
 			buf.append("message ").append(name);
