@@ -1,18 +1,14 @@
 package com.uxuan.protocl.parse;
 
-/**
- * 定义解析器
- * 
- * @author liuzhen
- */
-public interface Parser {
-	
-	/**
-	 * 解析
-	 * 
-	 * @param line 解析行
-	 */
+import com.uxuan.protocl.module.Line;
+import com.uxuan.protocl.util.DefineException;
+
+interface Parser {
+
 	Parser parse(Line line);
 	
-
+	default DefineException defindException(Line line) {
+		throw new DefineException("protocl:%s [line=%s], ", line.getFileName(), line.getLineNum());
+	}
+	
 }

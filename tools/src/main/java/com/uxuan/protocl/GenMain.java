@@ -1,6 +1,5 @@
 package com.uxuan.protocl;
 
-import com.uxuan.protocl.generate.JavaFile;
 import com.uxuan.protocl.module.Protocl;
 import com.uxuan.protocl.module.ProtoclFile;
 import com.uxuan.protocl.parse.ProtoclParser;
@@ -14,11 +13,11 @@ public class GenMain {
 //		String cdesPath = "./cpp";
 		
 		ProtoclParser parser = new ProtoclParser();
-		Protocl protocl =  parser.parse("./build");
+		//Protocl protocl =  parser.parse("./build");
 		
-		for (ProtoclFile pro : protocl.getProtocls()) {
-			JavaFile javaFile = new JavaFile(pro);
-			javaFile.autoGenMsg(sdesPath);
-		}
+//		for (ProtoclFile pro : protocl.getProtocls()) {
+//			JavaFile javaFile = new JavaFile(pro);
+//			javaFile.autoGenMsg(sdesPath);
+//		}
 	}
 }

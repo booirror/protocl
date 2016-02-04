@@ -1,9 +1,11 @@
 package com.uxuan.protocl.module;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
+ * 解析后文件
  *
  * @author liuzhen
  * Email liuxing521a@163.com
@@ -12,18 +14,22 @@ import java.util.List;
 public class Protocl {
 
 	/** 所有解析协议文件*/
-	private final List<ProtoclFile> protocls;
+	private final Map<String, ProtoclFile> protocls;
 	
 	public Protocl() {
-		protocls = new ArrayList<ProtoclFile>();
+		protocls = new LinkedHashMap<String, ProtoclFile>();
 	}
 	
 	public void addProtocl(ProtoclFile protocl) {
-		protocls.add(protocl);
+		protocls.put(protocl.getName(), protocl);
 	}
 
-	public List<ProtoclFile> getProtocls() {
-		return protocls;
+	public Map<String, ProtoclFile> getProtocls() {
+		return Collections.unmodifiableMap(protocls);
+	}
+	
+	public ProtoclFile getProtocl(String name) {
+		return protocls.get(name);
 	}
 	
 }

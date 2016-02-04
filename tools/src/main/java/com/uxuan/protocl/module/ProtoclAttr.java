@@ -74,7 +74,7 @@ public class ProtoclAttr {
 			type.isType(AttrType.FLOAT64) ||
 			type.isType(AttrType.STRING) || 
 			type.isType(AttrType.MESSAGE)) {
-			return String.format("%s %s;", type.getType(), name);
+			return String.format("%s %s;", type.getDefind(), name);
 		}
 		
 		if (type.isType(AttrType.ENUM)) {
@@ -82,18 +82,18 @@ public class ProtoclAttr {
 		}
 		
 		if (type.isType(AttrType.ARRAY)) {
-			return String.format("%s<%s>, %s;", getGenericAttribute(0).getType(), type.getType(), name);
+			return String.format("%s<%s>, %s;", type.getDefind(), getGenericAttribute(0).getDefind(), name);
 		} 
 		
 		if (type.isType(AttrType.SET)) {
-			return String.format("%s<%s>, %s;", getGenericAttribute(0).getType(), type.getType(), name);
+			return String.format("%s<%s>, %s;", type.getDefind(), getGenericAttribute(0).getDefind(), name);
 		} 
 		
 		if (type.isType(AttrType.MAP)) {
-			return String.format("%s<%s, %s>, %s;", getGenericAttribute(0).getType(), getGenericAttribute(1).getType(), type.getType(), name);
+			return String.format("%s<%s, %s>, %s;", type.getDefind(), getGenericAttribute(0).getDefind(), getGenericAttribute(1).getDefind(), name);
 		} 
 		
-		throw new RuntimeException("Unsupport Type:" + type.getType());
+		throw new RuntimeException("Unsupport Type:" + type.getDefind());
 	}
 	
 	public Builder toBuilder() {

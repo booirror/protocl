@@ -13,8 +13,11 @@ import com.uxuan.protocl.MessageType;
  */
 public class ProtoclMsg {
 
+
 	/** message name */
 	private final String name;
+
+	private final ProtoclFile file;
 	
 	/** 是否枚举类型*/
 	private final MessageType type;
@@ -22,10 +25,15 @@ public class ProtoclMsg {
 	/** message attributes*/
 	private final List<ProtoclAttr> attributes;
 	
-	public ProtoclMsg(MessageType type, String name) {
+	public ProtoclMsg(ProtoclFile file, MessageType type, String name) {
 		this.type = type;
+		this.file = file;
 		this.name = name;
 		this.attributes = new ArrayList<ProtoclAttr>();;
+	}
+	
+	public ProtoclFile getParent() {
+		return file;
 	}
 
 	public boolean isType(MessageType type) {

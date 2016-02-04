@@ -7,7 +7,7 @@ public enum AttrType {
 	 */
 	BOOL {
 		@Override
-		public String type() {
+		public String value() {
 			return "bool";
 		}
 	},
@@ -17,7 +17,7 @@ public enum AttrType {
 	 */
 	INT8 {
 		@Override
-		public String type() {
+		public String value() {
 			return "int8";
 		}
 	},
@@ -27,7 +27,7 @@ public enum AttrType {
 	 */
 	INT16 {
 		@Override
-		public String type() {
+		public String value() {
 			return "int16";
 		}
 	},
@@ -37,7 +37,7 @@ public enum AttrType {
 	 */
 	INT32 {
 		@Override
-		public String type() {
+		public String value() {
 			return "int32";
 		}
 	},
@@ -47,7 +47,7 @@ public enum AttrType {
 	 */
 	INT64 {
 		@Override
-		public String type() {
+		public String value() {
 			return "int64";
 		}
 	},
@@ -57,7 +57,7 @@ public enum AttrType {
 	 */
 	FLOAT32 {
 		@Override
-		public String type() {
+		public String value() {
 			return "float32";
 		}
 	},
@@ -67,7 +67,7 @@ public enum AttrType {
 	 */
 	FLOAT64 {
 		@Override
-		public String type() {
+		public String value() {
 			return "float64";
 		}
 	},
@@ -77,7 +77,7 @@ public enum AttrType {
 	 */
 	STRING {
 		@Override
-		public String type() {
+		public String value() {
 			return "string";
 		}
 	},
@@ -87,7 +87,7 @@ public enum AttrType {
 	 */
 	ENUM {
 		@Override
-		public String type() {
+		public String value() {
 			return null;
 		}
 	},
@@ -97,7 +97,7 @@ public enum AttrType {
 	 */
 	MESSAGE {
 		@Override
-		public String type() {
+		public String value() {
 			return null;
 		}
 	},
@@ -107,7 +107,7 @@ public enum AttrType {
 	 */
 	ARRAY {
 		@Override
-		public String type() {
+		public String value() {
 			return "array";
 		}
 	},
@@ -117,7 +117,7 @@ public enum AttrType {
 	 */
 	SET {
 		@Override
-		public String type() {
+		public String value() {
 			return "set";
 		}
 	},
@@ -127,7 +127,7 @@ public enum AttrType {
 	 */
 	MAP {
 		@Override
-		public String type() {
+		public String value() {
 			return "map";
 		}
 	},
@@ -136,10 +136,10 @@ public enum AttrType {
 	private AttrType() {
 	}
 
-	public abstract String type();
+	public abstract String value();
 	
-	@Override
-	public String toString() {
-		return type();
+	public boolean isType(String defind) {
+		return value().equals(defind);
 	}
+	
 }

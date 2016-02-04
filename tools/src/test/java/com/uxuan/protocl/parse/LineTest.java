@@ -3,6 +3,8 @@ package com.uxuan.protocl.parse;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.uxuan.protocl.module.Line;
+
 public class LineTest {
 
 	@Test

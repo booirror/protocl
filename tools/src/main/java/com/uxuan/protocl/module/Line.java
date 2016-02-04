@@ -1,4 +1,4 @@
-package com.uxuan.protocl.parse;
+package com.uxuan.protocl.module;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -11,7 +11,7 @@ import com.uxuan.protocl.util.DefineException;
  * 
  * @author liuzhen
  */
-final class Line {
+public final class Line {
 	
 	private final String fileName;
 	/** 行号*/

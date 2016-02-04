@@ -1,8 +1,10 @@
 package com.uxuan.protocl.module;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -14,6 +16,8 @@ import java.util.Set;
  */
 public final class ProtoclFile {
 
+	private final Protocl Protocl;
+	
 	/** 包名*/
 	private String pkg;
 	
@@ -24,14 +28,23 @@ public final class ProtoclFile {
 	private final String name;
 
 	/** 消息文件包含的消息 */
-	private final List<ProtoclMsg> messages;
+	private final Map<String, ProtoclMsg> messages;
 	
-	public ProtoclFile(String name) {
+	/** 解析文件行*/
+	private final List<Line> lineList;
+	
+	public ProtoclFile(Protocl Protocl, String name, List<Line> lineList) {
+		this.Protocl = Protocl;
 		this.name = name;
+		this.lineList = lineList;
 		this.imps = new HashSet<String>();
-		this.messages = new ArrayList<ProtoclMsg>();
+		this.messages = new LinkedHashMap<String, ProtoclMsg>();
 	}
 
+	public Protocl getPrev() {
+		return Protocl;
+	}
+	
 	/**
 	 * @return the packageName
 	 */
@@ -76,17 +89,25 @@ public final class ProtoclFile {
 	/**
 	 * @return the messages
 	 */
-	public List<ProtoclMsg> getMessages() {
-		return messages;
+	public Map<String, ProtoclMsg> getMessages() {
+		return Collections.unmodifiableMap(messages);
+	}
+	
+	public ProtoclMsg getMsg(String msgName) {
+		return messages.get(msgName);
 	}
 
 	/**
-	 * 添加导入包
+	 * 添加消息
 	 * 
-	 * @param importStr
+	 * @param msg
 	 */
 	public void addMessage(ProtoclMsg msg) {
-		this.messages.add(msg);
+		this.messages.put(msg.getName(), msg);
+	}
+	
+	public List<Line> getLineList() {
+		return lineList;
 	}
 	
 	@Override
@@ -103,7 +124,7 @@ public final class ProtoclFile {
 		}
 		
 		
-		for (ProtoclMsg msg : messages){
+		for (ProtoclMsg msg : messages.values()){
 			buf.append("\n\n");
 			buf.append(msg);
 		}

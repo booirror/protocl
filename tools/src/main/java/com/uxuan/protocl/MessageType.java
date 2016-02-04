@@ -1,13 +1,33 @@
 package com.uxuan.protocl;
 
 public enum MessageType {
+	
+	/**
+	 * 包
+	 */
+	PACKAGE {
+		@Override
+		public String value() {
+			return "package";
+		}
+	},
+	
+	/**
+	 * 导入
+	 */
+	IMPORT {
+		@Override
+		public String value() {
+			return "import";
+		}
+	},
 
 	/**
 	 * 枚举
 	 */
 	ENUM {
 		@Override
-		public String type() {
+		public String value() {
 			return "enum";
 		}
 	},
@@ -17,20 +37,18 @@ public enum MessageType {
 	 */
 	MESSAGE {
 		@Override
-		public String type() {
+		public String value() {
 			return "message";
 		}
 	},
-
 	;
 	
 	private MessageType() {
 	}
 
-	public abstract String type();
+	public abstract String value();
 	
-	@Override
-	public String toString() {
-		return type();
+	public boolean isType(String defind) {
+		return value().equals(defind);
 	}
 }

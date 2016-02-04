@@ -1,5 +1,7 @@
 package com.uxuan.protocl;
 
+import com.uxuan.protocl.generate.JavaLanguage;
+
 /**
  * 类型管理
  * 
@@ -15,7 +17,7 @@ public class LanguageManager {
 		return instance;
 	}
 	
-	private Language language =  new DefaultLanguage();
+	private Language language =  new JavaLanguage();
 	
 	public void init(Class<? extends Language> clazz) {
 		try {
@@ -23,6 +25,54 @@ public class LanguageManager {
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		} 
+	}
+	
+	public AttrType getType(String defind) {
+		if (AttrType.BOOL.isType(defind)) { 		
+			return AttrType.BOOL;
+		}
+		
+		if (AttrType.INT8.isType(defind)) { 		
+			return AttrType.INT8;
+		}
+		
+		if (AttrType.INT16.isType(defind)) { 		
+			return AttrType.INT16;
+		}
+		
+		if (AttrType.INT32.isType(defind)) { 		
+			return AttrType.INT32;
+		}
+		
+		if (AttrType.INT64.isType(defind)) { 		
+			return AttrType.INT64;
+		}
+		
+		if (AttrType.FLOAT32.isType(defind)) { 		
+			return AttrType.FLOAT32;
+		}
+		
+		if (AttrType.FLOAT64.isType(defind)) { 		
+			return AttrType.FLOAT64;
+		}
+		
+		if (AttrType.STRING.isType(defind)) { 		
+			return AttrType.STRING;
+		}
+		
+		if (AttrType.ARRAY.isType(defind)) {		
+			return AttrType.ARRAY;
+		}
+		
+		if (AttrType.SET.isType(defind)) {			
+			return AttrType.SET;
+		}
+		
+		if (AttrType.MAP.isType(defind)) {			
+			return AttrType.MAP;
+		}
+		
+		return null;
 	}
 	
 	public Attribute getAttribute(AttrType type) {
@@ -44,87 +94,5 @@ public class LanguageManager {
 		}
 	}
 	
-	private static class DefaultLanguage implements Language {
-		
-		private static final Attribute ATTRBOOL = Attribute.newBuilder().setType(AttrType.BOOL).build();
-		private static final Attribute ATTRINT8 = Attribute.newBuilder().setType(AttrType.INT8).build();
-		private static final Attribute ATTRINT16 = Attribute.newBuilder().setType(AttrType.INT16).build();
-		private static final Attribute ATTRINT32 = Attribute.newBuilder().setType(AttrType.INT32).build();
-		private static final Attribute ATTRINT64 = Attribute.newBuilder().setType(AttrType.INT64).build();
-		private static final Attribute FLOAT32 = Attribute.newBuilder().setType(AttrType.FLOAT32).build();
-		private static final Attribute FLOAT64 = Attribute.newBuilder().setType(AttrType.FLOAT64).build();
-		private static final Attribute STRING = Attribute.newBuilder().setType(AttrType.STRING).build();
-		private static final Attribute ENUM = Attribute.newBuilder().setType(AttrType.ENUM).build();
-		private static final Attribute MESSAGE = Attribute.newBuilder().setType(AttrType.MESSAGE).build();
-		private static final Attribute ARRAY = Attribute.newBuilder().setType(AttrType.ARRAY).build();
-		private static final Attribute SET = Attribute.newBuilder().setType(AttrType.SET).build();
-		private static final Attribute MAP = Attribute.newBuilder().setType(AttrType.SET).build();
-
-		@Override
-		public Attribute BOOL() {
-			return ATTRBOOL;
-		}
-
-		@Override
-		public Attribute INT8() {
-			return ATTRINT8;
-		}
-
-		@Override
-		public Attribute INT16() {
-			return ATTRINT16;
-		}
-
-		@Override
-		public Attribute INT32() {
-			return ATTRINT32;
-		}
-
-		@Override
-		public Attribute INT64() {
-			return ATTRINT64;
-		}
-
-		@Override
-		public Attribute FLOAT32() {
-			return FLOAT32;
-		}
-
-		@Override
-		public Attribute FLOAT64() {
-			return FLOAT64;
-		}
-
-		@Override
-		public Attribute STRING() {
-			return STRING;
-		}
-
-		@Override
-		public Attribute ENUM() {
-			return null;
-		}
-
-		@Override
-		public Attribute MESSAGE() {
-			return null;
-		}
-
-		@Override
-		public Attribute ARRAY() {
-			return ARRAY;
-		}
-
-		@Override
-		public Attribute SET() {
-			return SET;
-		}
-
-		@Override
-		public Attribute MAP() {
-			return MAP;
-		}
-
-	}
 	
 }

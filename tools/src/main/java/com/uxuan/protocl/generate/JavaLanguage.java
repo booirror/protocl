@@ -14,6 +14,8 @@ public class JavaLanguage implements Language {
 	private static final Attribute FLOAT32 = Attribute.newBuilder().setType(AttrType.FLOAT32).setBase("float").setWrap("Float").build();
 	private static final Attribute FLOAT64 = Attribute.newBuilder().setType(AttrType.FLOAT64).setBase("double").setWrap("Double").build();
 	private static final Attribute STRING = Attribute.newBuilder().setType(AttrType.STRING).setBase("String").setWrap("String").build();
+	private static final Attribute ENUM = Attribute.newBuilder().setType(AttrType.ENUM).build();
+	private static final Attribute MESSAGE = Attribute.newBuilder().setType(AttrType.MESSAGE).build();
 	private static final Attribute ARRAY = Attribute.newBuilder().setType(AttrType.ARRAY).setBase("java.util.List").setWrap("java.util.List").setCreate("java.util.ArrayList").build();
 	private static final Attribute SET = Attribute.newBuilder().setType(AttrType.SET).setBase("java.util.Set").setWrap("java.util.Set").setCreate("java.util.HashSet").build();
 	private static final Attribute MAP = Attribute.newBuilder().setType(AttrType.SET).setBase("java.util.Map").setWrap("java.util.Map").setCreate("java.util.HashMap").build();
@@ -60,14 +62,12 @@ public class JavaLanguage implements Language {
 
 	@Override
 	public Attribute ENUM() {
-		// TODO Auto-generated method stub
-		return null;
+		return ENUM;
 	}
 
 	@Override
 	public Attribute MESSAGE() {
-		// TODO Auto-generated method stub
-		return null;
+		return MESSAGE;
 	}
 
 	@Override

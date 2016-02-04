@@ -1,6 +1,6 @@
 package com.uxuan.protocl.util;
 
-public final class StringUtils {
+public final class Strings {
 	
 	/**
 	 * <p>第一个字母大写</p>
@@ -34,21 +34,7 @@ public final class StringUtils {
 		return String.format("%s%s", fistKey, suffix);
 	}
 	
-	public static String nextLine(int lineZise, int tableSize) {
-		StringBuilder nextBuf = new StringBuilder();
-		
-		for (int i = 0; i < lineZise; i++) {
-			nextBuf.append('\n');
-		}
-
-		for (int i = 0; i < tableSize; i++) {
-			nextBuf.append('\t');
-		}
-		
-		return nextBuf.toString();
-	}
-	
-	private StringUtils() {
+	private Strings() {
 		throw new RuntimeException("can't new intance");
 	}
 }

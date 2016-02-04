@@ -3,7 +3,7 @@ package com.uxuan.protocl.util;
 import java.io.Closeable;
 import java.io.IOException;
 
-public final class CloseUtil {
+public final class CloseAbles {
 
 	/**
 	 * 关闭
