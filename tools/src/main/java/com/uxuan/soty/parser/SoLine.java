@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.uxuan.protocl.util.DefineException;
+import com.uxuan.soty.util.DefineException;
 
 /***
  * 行内容

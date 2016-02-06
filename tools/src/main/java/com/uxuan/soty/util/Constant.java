@@ -84,7 +84,7 @@ public class Constant {
 		}
 
 		public boolean isType(String defind) {
-			return value.startsWith(defind);
+			return value.equals(defind);
 		}
 		
 		@Override

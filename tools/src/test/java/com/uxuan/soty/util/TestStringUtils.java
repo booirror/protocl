@@ -1,4 +1,4 @@
-package com.uxuan.protocl.util;
+package com.uxuan.soty.util;
 
 
 import org.junit.Assert;

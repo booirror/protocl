@@ -8,6 +8,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.uxuan.soty.module.SoFile;
 import com.uxuan.soty.module.SoMessage;
 import com.uxuan.soty.parser.SoParserManager.SoParseFile;
 import com.uxuan.soty.util.Constant.ContentType;
@@ -21,7 +22,7 @@ import com.uxuan.soty.util.Files;
  * Email liuxing521a@163.com
  * CreateTime 2016年1月28日 下午9:20:57
  */
-public class SoParser {
+final class SoParser {
 	
 	private SoParserManager soManager;
 	
@@ -29,20 +30,6 @@ public class SoParser {
 		this.soManager = soManager;
 	}
 	
-	public static void main(String[] args) throws IOException {
-//		SoParser parser = new SoParser();
-//		List<SoParseFile> fileList = parser.loadingSoFiles("./build");
-//		
-//		
-//		for (SoParseFile soFile : fileList) {
-//			System.out.println("=======================" + soFile.getName() + "=======================");
-//			
-//			for (SoMessage msg : soFile.getMessages().values()) {
-//				System.out.println(msg);
-//			}
-//		}
-		System.out.println("aaa".startsWith("aaa"));
-	}
 	
 	public List<SoParseFile> loadingSoFiles(String dir) throws IOException {
 		List<SoParseFile> soParseList = new ArrayList<SoParseFile>();
@@ -55,17 +42,17 @@ public class SoParser {
 		return soParseList;
 	}
 	
-//	public void parse()  {
-//		Map<String, ProtoclFile> msgMap = protocl.getProtocls();
-//		
-//		for (ProtoclFile protoFile : msgMap.values()) {
-//			Parser parser = new FileParser(protocl, protoFile);
-//			
-//			for (Line line : protoFile.getLineList()) {
-//				parser = parser.parse(line);
-//			}
-//		}
-//	}
+	public SoFile parse(SoParseFile soParseFile)  {
+		SoFile.Builder soFile = SoFile.newBuilder();
+		soFile.setName(soParseFile.getName());
+		
+		Parser parser = new SoFileParser(soManager, soFile);
+		for (SoLine soLine : soParseFile.getLines()) {
+			parser = parser.parse(soLine);
+		}
+		
+		return soFile.build();
+	}
 	
 	private SoParseFile loadingContent(File file) throws IOException {
 		String fileName = file.getName();

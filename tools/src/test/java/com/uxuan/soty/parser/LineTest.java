@@ -1,21 +1,19 @@
-package com.uxuan.protocl.parse;
+package com.uxuan.soty.parser;
 
 import org.junit.Assert;
 import org.junit.Test;
-
-import com.uxuan.protocl.module.Line;
 
 public class LineTest {
 
 	@Test
 	public void contentTest() {
-		Line line = new Line(null, 1, "//sdfsdfaasdfasdf");
+		SoLine line = new SoLine(null, 1, "//sdfsdfaasdfasdf");
 		Assert.assertEquals("", line.getContent());
 		
-		line = new Line(null, 1, " //sdfsdfaasdfasdf");
+		line = new SoLine(null, 1, " //sdfsdfaasdfasdf");
 		Assert.assertEquals("", line.getContent());
 		
-		line = new Line(null, 1, "asdf //sdfsdfaa//sdfasdf");
+		line = new SoLine(null, 1, "asdf //sdfsdfaa//sdfasdf");
 		Assert.assertEquals("asdf", line.getContent());
 	}
 	

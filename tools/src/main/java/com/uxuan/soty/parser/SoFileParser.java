@@ -78,13 +78,15 @@ final class SoFileParser implements Parser {
 		}
 		
 		if (!"{".equals(groups.get(2))) {
-			
-		}
-		
-		SoParseFile parseFile = soManager.getSoParseFile(soFile.getName());
-		if (soFile == null) {
 			defindException(line);
 		}
+		
+		System.out.println(groups.size() + ", " + soFile.getName());
+		SoParseFile parseFile = soManager.getSoParseFile(soFile.getName());
+		if (parseFile == null) {
+			defindException(line);
+		}
+		
 		
 		SoMessage soMessage = parseFile.getMessage(groups.get(1));
 		if (soMessage == null) {

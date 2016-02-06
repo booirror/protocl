@@ -3,8 +3,8 @@ package com.uxuan.protocl;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
-import com.uxuan.protocl.util.FilesTest;
-import com.uxuan.protocl.util.TestStringUtils;
+import com.uxuan.soty.util.FilesTest;
+import com.uxuan.soty.util.TestStringUtils;
 
 
 @RunWith(Suite.class)

@@ -2,7 +2,7 @@ package com.uxuan.protocl;
 
 import com.uxuan.protocl.module.Protocl;
 import com.uxuan.protocl.module.ProtoclFile;
-import com.uxuan.protocl.parse.ProtoclParser;
+import com.uxuan.soty.parser.ProtoclParser;
 
 public class GenMain {
 
