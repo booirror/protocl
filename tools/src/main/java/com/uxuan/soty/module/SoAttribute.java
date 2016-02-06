@@ -50,8 +50,8 @@ public class SoAttribute {
 		return index;
 	}
 
-	public SoDefinition getGenericAttribute(int index) {
-		return genericTypes.get(index);
+	public String getGenericAttribute(int index) {
+		return genericTypes.get(index).getTypeName();
 	}
 	
 	@Override
@@ -64,7 +64,8 @@ public class SoAttribute {
 			type.isType(DefindType.FLOAT32) ||
 			type.isType(DefindType.FLOAT64) ||
 			type.isType(DefindType.STRING) || 
-			type.isType(DefindType.MESSAGE)) {
+			type.isType(DefindType.MESSAGE) ||
+			type.isType(null) ) {
 			return String.format("%s %s;", type.getTypeName(), name);
 		}
 		
@@ -73,15 +74,15 @@ public class SoAttribute {
 		}
 		
 		if (type.isType(DefindType.ARRAY)) {
-			return String.format("%s<%s>, %s;", type.getTypeName(), getGenericAttribute(0).getTypeName(), name);
+			return String.format("%s<%s>, %s;", type.getTypeName(), getGenericAttribute(0), name);
 		} 
 		
 		if (type.isType(DefindType.SET)) {
-			return String.format("%s<%s>, %s;", type.getTypeName(), getGenericAttribute(0).getTypeName(), name);
+			return String.format("%s<%s>, %s;", type.getTypeName(), getGenericAttribute(0), name);
 		} 
 		
 		if (type.isType(DefindType.MAP)) {
-			return String.format("%s<%s, %s>, %s;", type.getTypeName(), getGenericAttribute(0).getTypeName(), getGenericAttribute(1).getTypeName(), name);
+			return String.format("%s<%s, %s>, %s;", type.getTypeName(), getGenericAttribute(0), getGenericAttribute(1), name);
 		} 
 		
 		throw new RuntimeException("Unsupport Type:" + type.getTypeName());

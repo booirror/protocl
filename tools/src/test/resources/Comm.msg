@@ -14,8 +14,8 @@ message Man {
 	int32 money;				// 拥有金钱
 	int64 mobile;				// 手机号
 	string address;				// 地址
-	float value1;			
-	double value2;
+	float32 value1;			
+	float64 value2;
 	Sex sex;					// 性别
-	String identity;			// 身份证
+	string identity;			// 身份证
 }

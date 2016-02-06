@@ -72,7 +72,7 @@ public class SoMessage {
 		return newBuilder()
 				.setType(type)
 				.setName(name)
-				.setAttributes(attributes);
+				.setAttributes(new ArrayList<SoAttribute>(attributes));
 	}
 	
 	public static Builder newBuilder() {

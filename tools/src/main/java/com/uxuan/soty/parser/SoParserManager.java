@@ -8,7 +8,6 @@ import java.util.Map;
 
 import com.uxuan.soty.module.SoFile;
 import com.uxuan.soty.module.SoMessage;
-import com.uxuan.soty.parser.SoParserManager.SoParseFile;
 
 public class SoParserManager {
 	

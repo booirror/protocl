@@ -1,6 +1,6 @@
 package com.uxuan.protocl;
 
-import com.uxuan.protocl.generate.JavaLanguage;
+import com.uxuan.soty.gen.JavaLanguage;
 
 /**
  * 类型管理

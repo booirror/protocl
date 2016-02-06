@@ -25,8 +25,8 @@ message ArrayTest {
 	array<int32> money;				// 拥有金钱
 	array<int64> mobile;				// 手机号
 	array<string> address;				// 地址
-	array<float> value1;			
-	array<double> value2;
+	array<float32> value1;			
+	array<float64> value2;
 	array<Comm.Sex> sex;					// 性别
 	array<Comm.Man> sex1;			// 性别
 }
@@ -39,8 +39,8 @@ message SetTest {
 	set<int32> money;				// 拥有金钱
 	set<int64> mobile;				// 手机号
 	set<string> address;				// 地址
-	set<float> value1;			
-	set<double> value2;
+	set<float32> value1;			
+	set<float64> value2;
 	set<Comm.Sex> sex;					// 性别
 	set<Comm.Man> sex1;					// 性别
 }
@@ -53,8 +53,8 @@ message MapTest {
 	map<int32,Comm.Man> money;				// 拥有金钱
 	map<int64,Comm.Man> mobile;				// 手机号
 	map<string,Comm.Man> address;				// 地址
-	map<float,Comm.Man> value1;			
-	map<double,Comm.Man> value2;
+	map<float32,Comm.Man> value1;			
+	map<float64,Comm.Man> value2;
 	map<Comm.Sex,Comm.Man> sex;					// 性别
 	map<Comm.Man,Comm.Sex> sex1;					// 性别
 }

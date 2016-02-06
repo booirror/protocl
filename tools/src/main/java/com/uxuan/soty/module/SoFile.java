@@ -93,6 +93,7 @@ public final class SoFile {
 		private List<SoMessage> messages;
 		
 		private Builder() {
+			this.imps = new HashSet<String>();
 			this.messages = new ArrayList<SoMessage>();
 		}
 

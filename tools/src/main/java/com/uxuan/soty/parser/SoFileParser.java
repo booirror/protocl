@@ -40,8 +40,12 @@ final class SoFileParser implements Parser {
 		if (ContentType.ENUM.isType(defindType) || ContentType.MESSAGE.isType(defindType)) {
 			return doMsg(line, groups);
 		} 
-
+		
 		throw new DefineException("protocl:%s [line=%s], ", line.getFileName(), line.getLineNum());
+	}
+	
+	void addMessage(SoMessage soMsg) {
+		soFile.addMessages(soMsg);
 	}
 	
 	private Parser doPackage(SoLine line, List<String> groups) {
@@ -81,7 +85,6 @@ final class SoFileParser implements Parser {
 			defindException(line);
 		}
 		
-		System.out.println(groups.size() + ", " + soFile.getName());
 		SoParseFile parseFile = soManager.getSoParseFile(soFile.getName());
 		if (parseFile == null) {
 			defindException(line);
@@ -93,7 +96,7 @@ final class SoFileParser implements Parser {
 			defindException(line);
 		}
 
-		return new MsgParser(soManager, this, soMessage.toBuilder(), soFile);
+		return new SoMsgParser(soManager, this, soMessage.toBuilder(), soFile);
 	}
 
 }

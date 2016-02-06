@@ -1,4 +1,4 @@
-package com.uxuan.protocl.generate;
+package com.uxuan.soty.gen;
 
 import com.uxuan.protocl.AttrType;
 import com.uxuan.protocl.Attribute;

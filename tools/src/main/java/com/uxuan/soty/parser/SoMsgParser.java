@@ -12,17 +12,17 @@ import com.uxuan.soty.parser.SoParserManager.SoParseFile;
 import com.uxuan.soty.util.Constant.ContentType;
 import com.uxuan.soty.util.Constant.DefindType;
 
-final class MsgParser implements Parser {
+final class SoMsgParser implements Parser {
 	
 	private SoParserManager soManager;
 
-	private final Parser parent;
+	private final SoFileParser parent;
 	
 	private final SoMessage.Builder soMessage;
 	
 	private final SoFile.Builder soFile;
 	
-	public MsgParser(SoParserManager soManager, Parser parent, SoMessage.Builder soMessage, SoFile.Builder soFile) {
+	public SoMsgParser(SoParserManager soManager, SoFileParser parent, SoMessage.Builder soMessage, SoFile.Builder soFile) {
 		this.parent = parent;
 		this.soFile = soFile;
 		this.soManager = soManager;
@@ -36,7 +36,64 @@ final class MsgParser implements Parser {
 		}
 		
 		List<String> groups = line.toGroup();
+		if (soMessage.getType() == ContentType.ENUM) {
+			return enumParse(line, groups);
+		}
 		
+		
+		if (soMessage.getType() == ContentType.MESSAGE) {
+			return msgParse(line, groups);
+		}
+
+		throw defindException(line);
+	}
+	
+	private Parser enumParse(SoLine line, List<String> groups) {
+		String enumName = groups.get(0);
+		
+		if (ContentType.PACKAGE.isType(enumName)) {
+			defindException(line);
+		}
+		
+		if (ContentType.IMPORT.isType(enumName)) {
+			defindException(line);
+		}
+		
+		if (ContentType.ENUM.isType(enumName)) {
+			defindException(line);
+		}
+		
+		if (ContentType.MESSAGE.isType(enumName)) {
+			defindException(line);
+		}
+		
+		if (groups.size() == 1 && "}".equals(enumName)) {
+			parent.addMessage(soMessage.build());
+			return parent;
+		}
+		
+		if ("{".equals(enumName) || !";".equals(groups.get(2))) {
+			defindException(line);
+		}
+		
+		int index = -1;
+		try {
+			index = Integer.parseInt(groups.get(1));
+		} catch (NumberFormatException e) {
+			throw defindException(line);
+		}
+	
+		SoDefinition soDefinition = SoDefinition.newBuilder().setType(DefindType.ENUM).build();
+		soMessage.addAttribute(SoAttribute.newBuilder()
+				.setType(soDefinition)
+				.setName(groups.get(0))
+				.setIndex(index)
+				.build());
+		return this;
+
+	}
+	
+	private Parser msgParse(SoLine line, List<String> groups) {
 		String defindType = groups.get(0);
 		if (ContentType.PACKAGE.isType(defindType)) {
 			defindException(line);
@@ -59,6 +116,7 @@ final class MsgParser implements Parser {
 		}
 		
 		if (groups.size() == 1 && "}".equals(defindType)) {
+			parent.addMessage(soMessage.build());
 			return parent;
 		}
 		
@@ -69,7 +127,7 @@ final class MsgParser implements Parser {
 		int index = defindType.indexOf('<');
 		String defind = (index == -1) ? defindType : defindType.substring(0, index);
 	
-		SoDefinition.Builder soDefinition = SoDefinition.newBuilder().setTypeName(groups.get(0));
+		SoDefinition.Builder soDefinition = SoDefinition.newBuilder().setTypeName(defind);
 		
 		// boolean 类型
 		if (DefindType.BOOL.isType(defind)) {
@@ -147,7 +205,7 @@ final class MsgParser implements Parser {
 		if (DefindType.ARRAY.isType(defind)) {
 			soMessage.addAttribute(SoAttribute.newBuilder()
 					.setType(soDefinition.setType(DefindType.ARRAY).build())
-					.setGenericTypes(singtonTypes(defindType, line))
+					.setGenericTypes(singtonGenericTypes(defindType, line))
 					.setName(groups.get(1))
 					.build());
 			return this;
@@ -157,7 +215,7 @@ final class MsgParser implements Parser {
 		if (DefindType.SET.isType(defind)) {
 			soMessage.addAttribute(SoAttribute.newBuilder()
 					.setType(soDefinition.setType(DefindType.SET).build())
-					.setGenericTypes(singtonTypes(defindType, line))
+					.setGenericTypes(singtonGenericTypes(defindType, line))
 					.setName(groups.get(1))
 					.build());
 			return this;
@@ -167,7 +225,7 @@ final class MsgParser implements Parser {
 		if (DefindType.MAP.isType(defind)) {
 			soMessage.addAttribute(SoAttribute.newBuilder()
 					.setType(soDefinition.setType(DefindType.MAP).build())
-					.setGenericTypes(doubleTypes(defindType, line))
+					.setGenericTypes(doubleGenericTypes(defindType, line))
 					.setName(groups.get(1))
 					.build());
 			return this;
@@ -175,8 +233,15 @@ final class MsgParser implements Parser {
 		
 		
 		SoDefinition definition = getGenericType(defindType, line);
-		if (definition.getType() == DefindType.ENUM || 
-			definition.getType() == DefindType.MESSAGE) {
+		if (definition.getType() == DefindType.ENUM ) {
+			soMessage.addAttribute(SoAttribute.newBuilder()
+					.setType(definition.toBuilder().setType(null).build())
+					.setName(groups.get(1))
+					.build());
+			return this;
+		} 
+		
+		if (definition.getType() == DefindType.MESSAGE) {
 			soMessage.addAttribute(SoAttribute.newBuilder()
 					.setType(definition)
 					.setName(groups.get(1))
@@ -184,11 +249,10 @@ final class MsgParser implements Parser {
 			return this;
 		} 
 
-
 		throw defindException(line);
 	}
 	
-	private List<SoDefinition> singtonTypes(String defindType, SoLine line) {
+	private List<SoDefinition> singtonGenericTypes(String defindType, SoLine line) {
 		int begin = defindType.indexOf('<');
 		int end = defindType.indexOf('>');
 		if (begin <= 0 || end != (defindType.length() - 1) || defindType.indexOf(',') != -1) {
@@ -201,7 +265,7 @@ final class MsgParser implements Parser {
 		return Arrays.asList(definition);
 	}
 	
-	private List<SoDefinition> doubleTypes(String defindType, SoLine line) {
+	private List<SoDefinition> doubleGenericTypes(String defindType, SoLine line) {
 		int begin = defindType.indexOf('<');
 		int split = defindType.indexOf(',');
 		int end = defindType.indexOf('>');
@@ -260,6 +324,11 @@ final class MsgParser implements Parser {
 		// 双精度
 		if (DefindType.FLOAT64.isType(genericType)) {
 			return builder.setType(DefindType.FLOAT64).build();
+		}
+		
+		// 字符串
+		if (DefindType.STRING.isType(genericType)) {
+			return builder.setType(DefindType.STRING).build();
 		}
 		
 		//不支持array
